@@ -30,3 +30,14 @@ npm run build
 ## Próxima etapa técnica
 
 Adicionar a API NestJS, PostgreSQL e Prisma para persistir as entidades do documento mestre (`Lead`, `LeadEvidence`, `LeadAnalysis`, `OutreachDraft`, `Activity`, `Opportunity` e `SearchJob`), antes de habilitar integrações externas.
+
+## Base técnica planejada
+
+O repositório já contém o desenho da estrutura a ser implementada:
+
+- [Arquitetura](docs/ARCHITECTURE.md)
+- [Contrato de API](docs/API-CONTRACT.md)
+- [Plano de implementação](docs/IMPLEMENTATION-PLAN.md)
+- [Segurança e dados](docs/SECURITY-AND-DATA.md)
+- [Modelo Prisma](prisma/schema.prisma)
+- [Guia da API](apps/api/README.md)
