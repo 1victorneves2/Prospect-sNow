@@ -1,0 +1,11 @@
+{
+  "name": "snowdrop-prospect",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev": "npm run dev --workspace=@snowdrop/web",
+    "build": "npm run build --workspace=@snowdrop/web",
+    "typecheck": "npm run typecheck --workspace=@snowdrop/web"
+  }
+}
