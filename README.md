@@ -21,6 +21,14 @@ npm install
 npm run dev
 ```
 
+Para iniciar a API em outro terminal:
+
+```bash
+npm run dev:api
+```
+
+O healthcheck da API está disponível em `http://localhost:3000/v1/health`.
+
 Para gerar o build de produção:
 
 ```bash

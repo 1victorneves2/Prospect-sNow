@@ -1,16 +1,23 @@
-# API — implementação planejada
+# API — Snowdrop Prospect
 
-Esta pasta é reservada à API NestJS do Snowdrop Prospect. Ela ainda não contém uma
-aplicação executável, para evitar uma base com credenciais e integrações parcialmente
-configuradas.
+API NestJS do Snowdrop Prospect. A fundação atual inclui configuração de ambiente
+validada, CORS para o frontend local, validação global de requisições e healthcheck.
+
+## Executar
+
+Na raiz do monorepo:
+
+```bash
+npm run dev:api
+```
+
+O healthcheck responde em `GET http://localhost:3000/v1/health`.
 
 ## Ordem para iniciar
 
-1. Inicializar NestJS nesta pasta com TypeScript estrito.
-2. Instalar `@prisma/client`, `prisma`, `zod`, `@nestjs/config`, autenticação e testes.
-3. Configurar `DATABASE_URL` e aplicar a primeira migração a partir de `../../prisma/schema.prisma`.
-4. Implementar autenticação e RBAC antes de expor qualquer rota de leads.
-5. Criar módulos na ordem: `health`, `auth`, `leads`, `pipeline`, `outreach`, `discovery`, `analysis`.
+1. Configurar `DATABASE_URL` e aplicar a primeira migração a partir de `../../prisma/schema.prisma`.
+2. Implementar autenticação e RBAC antes de expor qualquer rota de leads.
+3. Criar módulos na ordem: `auth`, `leads`, `pipeline`, `outreach`, `discovery`, `analysis`.
 
 Os contratos, regras de domínio e rotas sugeridas estão em `../../docs/`.
 
