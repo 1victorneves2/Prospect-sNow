@@ -27,6 +27,19 @@ Para gerar o build de produção:
 npm run build
 ```
 
+## Qualidade
+
+Use Node 24 (definido em `.nvmrc`) e execute os comandos a partir da raiz:
+
+```bash
+npm run lint
+npm test
+npm run typecheck
+npm run format:check
+```
+
+O hook de pre-commit formata e aplica lint nos arquivos alterados. A integração contínua executa lint, testes, tipagem e build a cada push ou pull request.
+
 ## Próxima etapa técnica
 
 Adicionar a API NestJS, PostgreSQL e Prisma para persistir as entidades do documento mestre (`Lead`, `LeadEvidence`, `LeadAnalysis`, `OutreachDraft`, `Activity`, `Opportunity` e `SearchJob`), antes de habilitar integrações externas.

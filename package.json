@@ -2,18 +2,43 @@
   "name": "snowdrop-prospect",
   "private": true,
   "version": "0.1.0",
-  "workspaces": ["apps/*", "packages/*"],
+  "engines": {
+    "node": ">=22 <25",
+    "npm": ">=10"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
+    "prepare": "husky",
     "dev": "npm run dev --workspace=@snowdrop/web",
     "build": "npm run build --workspace=@snowdrop/web",
     "typecheck": "npm run typecheck --workspace=@snowdrop/web",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run --passWithNoTests",
     "db:format": "prisma format --schema prisma/schema.prisma",
     "db:validate": "prisma validate --schema prisma/schema.prisma"
   },
   "devDependencies": {
-    "prisma": "6.16.0"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "prisma": "6.16.0",
+    "typescript-eslint": "^8.71.2",
+    "vitest": "^5.0.4"
   },
   "dependencies": {
     "@prisma/client": "6.16.0"
+  },
+  "lint-staged": {
+    "*.{css,js,json,md,ts,tsx,yml,yaml}": "prettier --write",
+    "apps/web/src/**/*.{ts,tsx}": "eslint --fix"
   }
 }

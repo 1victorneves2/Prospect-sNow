@@ -29,15 +29,15 @@ pequena escala; ao crescer, a execução sai do request HTTP e passa para fila/w
 
 ## Módulos da API
 
-| Módulo | Responsabilidade | Estado inicial |
-| --- | --- | --- |
-| `health` | Liveness/readiness para deploy | primeiro a criar |
-| `auth` | Login, sessão/JWT e papéis | obrigatório antes de dados reais |
-| `leads` | CRUD, deduplicação e não-contato | fundação comercial |
-| `pipeline` | status, oportunidade, atividades, follow-up | após leads |
-| `discovery` | Google Places, field masks e `SearchJob` | credencial necessária |
-| `analysis` | evidências, score explicável e IA | nunca inventar fatos |
-| `outreach` | rascunho, edição, aprovação e registro manual | sem envio automático |
+| Módulo      | Responsabilidade                              | Estado inicial                   |
+| ----------- | --------------------------------------------- | -------------------------------- |
+| `health`    | Liveness/readiness para deploy                | primeiro a criar                 |
+| `auth`      | Login, sessão/JWT e papéis                    | obrigatório antes de dados reais |
+| `leads`     | CRUD, deduplicação e não-contato              | fundação comercial               |
+| `pipeline`  | status, oportunidade, atividades, follow-up   | após leads                       |
+| `discovery` | Google Places, field masks e `SearchJob`      | credencial necessária            |
+| `analysis`  | evidências, score explicável e IA             | nunca inventar fatos             |
+| `outreach`  | rascunho, edição, aprovação e registro manual | sem envio automático             |
 
 ## Regras inegociáveis
 
@@ -61,8 +61,8 @@ pequena escala; ao crescer, a execução sai do request HTTP e passa para fila/w
 
 ## Ambientes
 
-| Ambiente | Finalidade | Dados |
-| --- | --- | --- |
-| local | desenvolvimento | banco local e dados demonstrativos |
-| preview | revisão de pull request | dados sintéticos, chaves isoladas |
-| production | operação interna | dados comerciais reais |
+| Ambiente   | Finalidade              | Dados                              |
+| ---------- | ----------------------- | ---------------------------------- |
+| local      | desenvolvimento         | banco local e dados demonstrativos |
+| preview    | revisão de pull request | dados sintéticos, chaves isoladas  |
+| production | operação interna        | dados comerciais reais             |
