@@ -11,7 +11,13 @@ Na raiz do monorepo:
 npm run dev:api
 ```
 
-O healthcheck responde em `GET http://localhost:3000/v1/health`.
+O healthcheck responde em `GET http://localhost:3000/v1/health`. Ele verifica se a
+API está viva; a disponibilidade do banco será verificada quando o banco for
+integrado.
+
+Cada resposta inclui `X-Request-Id`. Os erros seguem o formato
+`{ "code": "...", "message": "...", "requestId": "..." }`. Os logs HTTP registram
+ID, método, rota, status e duração, sem corpo da requisição nem query string.
 
 ## Ordem para iniciar
 

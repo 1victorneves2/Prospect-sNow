@@ -27,4 +27,6 @@
 
 - Rate limit em login, descoberta e geração de IA.
 - Logs estruturados com `requestId`, sem segredos ou conteúdo sensível desnecessário.
+- Respostas de erro não incluem exceções internas; use `X-Request-Id` para correlacionar
+  a resposta com os logs do servidor.
 - Backups e menor privilégio no banco em produção.

@@ -23,6 +23,6 @@ Os formatos finais devem ser validados em runtime com Zod.
 
 - IDs: `cuid` interno; IDs de provedores ficam em `ExternalPlaceReference`.
 - Paginação: `?cursor=<id>&limit=25`, máximo 100.
-- Erros: `{ "code": "LEAD_DUPLICATE", "message": "...", "requestId": "..." }`.
+- Erros: `{ "code": "BAD_REQUEST", "message": "...", "requestId": "..." }`; o mesmo ID aparece no cabeçalho `X-Request-Id`.
 - Toda escrita registra ator e gera `Activity` quando houver impacto comercial.
 - A rota de descoberta retorna candidatos para revisão; apenas ação explícita cria leads.
