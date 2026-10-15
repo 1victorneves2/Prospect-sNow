@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   BarChart3,
   Building2,
   ChevronDown,
   Command,
-  ExternalLink,
   LayoutDashboard,
   MapPin,
   MessageSquare,
@@ -15,78 +14,10 @@ import {
   Target,
   Users,
 } from 'lucide-react'
-
-type Stage =
-  'Descoberto' | 'Analisado' | 'Contatado' | 'Respondeu' | 'Reunião' | 'Proposta' | 'Fechado'
-type Lead = {
-  id: number
-  name: string
-  segment: string
-  region: string
-  score: number
-  stage: Stage
-  phone: boolean
-  site: 'Ausente' | 'Linktree' | 'Ativo'
-  updated: string
-}
-
-const initialLeads: Lead[] = [
-  {
-    id: 1,
-    name: 'Bella Moda Feminina',
-    segment: 'Moda e vestuário',
-    region: 'Adrianópolis',
-    score: 92,
-    stage: 'Analisado',
-    phone: true,
-    site: 'Linktree',
-    updated: 'Hoje, 10:34',
-  },
-  {
-    id: 2,
-    name: 'Maison Lune Semijoias',
-    segment: 'Semijoias',
-    region: 'Vieiralves',
-    score: 86,
-    stage: 'Contatado',
-    phone: true,
-    site: 'Ausente',
-    updated: 'Hoje, 09:22',
-  },
-  {
-    id: 3,
-    name: 'Ateliê Aurora',
-    segment: 'Moda e vestuário',
-    region: 'Ponta Negra',
-    score: 78,
-    stage: 'Descoberto',
-    phone: false,
-    site: 'Ausente',
-    updated: 'Ontem',
-  },
-  {
-    id: 4,
-    name: 'Studio Vivá',
-    segment: 'Clínica de estética',
-    region: 'Parque Dez',
-    score: 71,
-    stage: 'Respondeu',
-    phone: true,
-    site: 'Ativo',
-    updated: 'Ontem',
-  },
-  {
-    id: 5,
-    name: 'Casa Forma Planejados',
-    segment: 'Móveis planejados',
-    region: 'Flores',
-    score: 64,
-    stage: 'Reunião',
-    phone: true,
-    site: 'Ativo',
-    updated: 'Segunda-feira',
-  },
-]
+import { LeadDrawer } from './components/LeadDrawer'
+import { LeadRow } from './components/LeadRow'
+import { SearchOverlay } from './components/SearchOverlay'
+import { initialLeads, scoreLevel, stageColor, type Lead, type Stage } from './demo/leads'
 
 const nav = [
   ['Visão geral', LayoutDashboard],
@@ -96,16 +27,6 @@ const nav = [
   ['Pipeline', Target],
   ['Relatórios', BarChart3],
 ] as const
-
-const stageColor: Record<Stage, string> = {
-  Descoberto: 'slate',
-  Analisado: 'violet',
-  Contatado: 'blue',
-  Respondeu: 'amber',
-  Reunião: 'rose',
-  Proposta: 'cyan',
-  Fechado: 'green',
-}
 
 export function App() {
   const [page, setPage] = useState('Visão geral')
@@ -679,45 +600,6 @@ function Reports() {
   )
 }
 
-function LeadRow({ lead, onClick }: { lead: Lead; onClick: () => void }) {
-  return (
-    <tr>
-      <td>
-        <div className="company-cell">
-          <span className="company-logo small">{lead.name.slice(0, 2).toUpperCase()}</span>
-          <div>
-            <button
-              className="company-link"
-              onClick={onClick}
-              aria-label={`Abrir detalhes de ${lead.name}`}
-            >
-              {lead.name}
-            </button>
-            <small>{lead.phone ? 'Telefone disponível' : 'Contato a verificar'}</small>
-          </div>
-        </div>
-      </td>
-      <td>{lead.segment}</td>
-      <td>{lead.region}</td>
-      <td>
-        <span className={`score ${scoreLevel(lead.score)}`}>{lead.score}</span>
-      </td>
-      <td>
-        <span className={`badge ${stageColor[lead.stage]}`}>{lead.stage}</span>
-      </td>
-      <td>{lead.updated}</td>
-      <td>
-        <button
-          className="row-action"
-          onClick={onClick}
-          aria-label={`Abrir detalhes de ${lead.name}`}
-        >
-          <ExternalLink size={17} />
-        </button>
-      </td>
-    </tr>
-  )
-}
 function Metric({
   icon,
   label,
@@ -775,197 +657,4 @@ function Attention({ title, detail, tone }: { title: string; detail: string; ton
       <span>→</span>
     </div>
   )
-}
-function SearchOverlay({
-  onClose,
-  onSelect,
-  leads,
-}: {
-  onClose: () => void
-  onSelect: (l: Lead) => void
-  leads: Lead[]
-}) {
-  const [search, setSearch] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
-  const dialogRef = useRef<HTMLDivElement>(null)
-  const results = leads.filter((lead) =>
-    `${lead.name} ${lead.segment} ${lead.region}`
-      .toLowerCase()
-      .includes(search.trim().toLowerCase()),
-  )
-
-  useDialogFocus(dialogRef, inputRef, onClose)
-
-  return (
-    <div className="overlay" onMouseDown={onClose}>
-      <div
-        ref={dialogRef}
-        className="quick-search"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Buscar leads de exemplo"
-        onMouseDown={(e) => e.stopPropagation()}
-      >
-        <div className="input-icon">
-          <Search />
-          <input
-            ref={inputRef}
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Buscar empresa, segmento ou região..."
-            aria-label="Buscar leads"
-          />
-        </div>
-        <p>LEADS DE EXEMPLO</p>
-        {results.length === 0 && <p className="search-empty">Nenhum resultado encontrado.</p>}
-        {results.map((l) => (
-          <button key={l.id} onClick={() => onSelect(l)}>
-            <span className="company-logo small">{l.name.slice(0, 2)}</span>
-            <span>
-              {l.name}
-              <small>{l.segment}</small>
-            </span>
-            <ExternalLink size={15} />
-          </button>
-        ))}
-        <footer>
-          <kbd>ESC</kbd> para fechar <button onClick={onClose}>Fechar</button>
-        </footer>
-      </div>
-    </div>
-  )
-}
-function LeadDrawer({
-  lead,
-  onClose,
-  onMove,
-}: {
-  lead: Lead
-  onClose: () => void
-  onMove: (stage: Stage) => void
-}) {
-  const closeRef = useRef<HTMLButtonElement>(null)
-  const dialogRef = useRef<HTMLElement>(null)
-  useDialogFocus(dialogRef, closeRef, onClose)
-
-  return (
-    <div className="drawer-layer" onMouseDown={onClose}>
-      <aside
-        ref={dialogRef}
-        className="drawer"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="lead-drawer-title"
-        onMouseDown={(e) => e.stopPropagation()}
-      >
-        <button
-          ref={closeRef}
-          className="drawer-close"
-          onClick={onClose}
-          aria-label="Fechar detalhes do lead"
-        >
-          ×
-        </button>
-        <span className={`badge ${stageColor[lead.stage]}`}>{lead.stage}</span>
-        <h1 id="lead-drawer-title">{lead.name}</h1>
-        <p className="subtle">
-          {lead.segment} · {lead.region}
-        </p>
-        <div className="drawer-score">
-          <span className={`score ${scoreLevel(lead.score)}`}>{lead.score}</span>
-          <div>
-            <strong>Score de oportunidade</strong>
-            <p>Valor ilustrativo, sem cálculo real</p>
-          </div>
-        </div>
-        <h3>Diagnóstico</h3>
-        <div className="evidence">
-          <span>FATO OBSERVADO</span>
-          <p>
-            {lead.site === 'Ausente'
-              ? 'Nenhum website foi informado na fonte consultada.'
-              : lead.site === 'Linktree'
-                ? 'O canal informado aponta para uma página agregadora de links.'
-                : 'Há presença digital registrada; a experiência ainda precisa de verificação.'}
-          </p>
-          <small>Exemplo fictício · fonte não verificada</small>
-        </div>
-        <div className="evidence">
-          <span>HIPÓTESE COMERCIAL</span>
-          <p>
-            Uma vitrine digital própria pode centralizar produtos e tornar o caminho até o pedido
-            mais direto.
-          </p>
-          <small>Confiança média · requer validação humana</small>
-        </div>
-        <h3>Atualizar etapa</h3>
-        <select
-          aria-label="Etapa do lead demonstrativo"
-          value={lead.stage}
-          onChange={(e) => onMove(e.target.value as Stage)}
-        >
-          {(
-            [
-              'Descoberto',
-              'Analisado',
-              'Contatado',
-              'Respondeu',
-              'Reunião',
-              'Proposta',
-              'Fechado',
-            ] as Stage[]
-          ).map((s) => (
-            <option key={s}>{s}</option>
-          ))}
-        </select>
-        <p className="section-hint">
-          Alteração temporária nesta prévia; geração de mensagem ainda indisponível.
-        </p>
-      </aside>
-    </div>
-  )
-}
-function scoreLevel(score: number) {
-  return score >= 80 ? 'high' : score >= 50 ? 'medium' : 'low'
-}
-
-function useDialogFocus(
-  dialogRef: RefObject<HTMLElement | null>,
-  initialFocusRef: RefObject<HTMLElement | null>,
-  onClose: () => void,
-) {
-  useEffect(() => {
-    const previousFocus =
-      document.activeElement instanceof HTMLElement ? document.activeElement : null
-    initialFocusRef.current?.focus()
-
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        onClose()
-      }
-      if (event.key !== 'Tab' || !dialogRef.current) return
-
-      const focusable = [
-        ...dialogRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        ),
-      ]
-      const first = focusable[0]
-      const last = focusable.at(-1)
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault()
-        last?.focus()
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault()
-        first?.focus()
-      }
-    }
-
-    window.addEventListener('keydown', onKeyDown)
-    return () => {
-      window.removeEventListener('keydown', onKeyDown)
-      previousFocus?.focus()
-    }
-  }, [dialogRef, initialFocusRef, onClose])
 }

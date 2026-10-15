@@ -32,7 +32,7 @@ Tipografia: Manrope para interface, Playfair Display apenas para títulos editor
 - `AppShell`: sidebar no desktop e navegação horizontal rolável no mobile; a seção ativa deve ser perceptível.
 - `PageHeading`: título, descrição breve e, quando houver, ação contextual real.
 - `Panel` e `Metric`: superfícies com hierarquia consistente, estado e dados derivados da mesma fonte.
-- `SearchDialog` e `LeadDrawer`: diálogos nomeados, fecháveis por Escape, foco inicial e retorno ao disparador. Gerenciamento completo de foco deverá ser consolidado em componente compartilhado.
+- `SearchOverlay` e `LeadDrawer`: diálogos nomeados, fecháveis por Escape, foco inicial, contenção do Tab e retorno ao disparador pelo hook compartilhado `useDialogFocus`.
 - Formulários: rótulos visíveis, campos com foco, obrigatoriedade e feedback contextual.
 
 ## Componentes de domínio
@@ -46,7 +46,7 @@ Tipografia: Manrope para interface, Playfair Display apenas para títulos editor
 ## Próximos passos de UX
 
 1. Aprovar ou ajustar a direção visual com base nas referências enviadas.
-2. Transformar componentes-base em arquivos reutilizáveis e adicionar testes de interação e estados vazio/erro/volume.
+2. Continuar a extração dos painéis e telas do arquivo principal; adicionar testes de interação e estados de erro/volume. Os componentes de lead e diálogo já estão separados.
 3. Conectar dados reais somente após autenticação, contrato de API e persistência.
 
 Nesta etapa, a aplicação é uma prévia com dados fictícios e sem persistência. Nenhum indicador ou fonte simulada deve ser apresentado como resultado real.
