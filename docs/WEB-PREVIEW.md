@@ -14,6 +14,10 @@ npm run build --workspace=@snowdrop/web
 npm run preview --workspace=@snowdrop/web
 ```
 
-O GitHub Pages não está disponível para este repositório privado no plano GitHub atual: **Settings → Pages** exige upgrade ou repositório público. O workflow de Pages foi retirado após duas execuções bloqueadas. Manter o repositório privado é a decisão vigente; não tentar reativar o workflow sem revisar o plano de hospedagem.
+O GitHub Pages exige um repositório público no plano GitHub atual. O proprietário autorizou torná-lo público temporariamente para publicar esta prévia. A publicação usa `.github/workflows/pages.yml` na branch `work`; o build ajusta a base do Vite para `/Prospect-sNow/`.
+
+Após mudar a visibilidade em **Settings → General → Danger Zone → Change repository visibility**, configurar **Settings → Pages → Build and deployment → Source: GitHub Actions**. Enviar um commit à branch `work` ou executar manualmente o workflow `Publish web preview`. Confirmar que o job `deploy` terminou com sucesso e abrir <https://1victorneves2.github.io/Prospect-sNow/>. A URL não deve ser considerada publicada antes dessa verificação.
+
+Se o repositório voltar a ser privado no mesmo plano, o GitHub Pages poderá deixar de publicar ou servir a página. Nesse caso, usar outra hospedagem para manter a prévia disponível.
 
 A interface usa dados fictícios em memória. Ainda não há login, banco, API conectada nem integrações externas. Não incluir segredos ou dados reais no frontend ou em variáveis `VITE_*`.
