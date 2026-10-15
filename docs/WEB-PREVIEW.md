@@ -14,7 +14,7 @@ npm run build --workspace=@snowdrop/web
 npm run preview --workspace=@snowdrop/web
 ```
 
-O GitHub Pages exige um repositório público no plano GitHub atual. O proprietário autorizou torná-lo público temporariamente para publicar esta prévia. A publicação usa `.github/workflows/pages.yml` na branch `work`; o build ajusta a base do Vite para `/Prospect-sNow/`.
+O GitHub Pages exige um repositório público no plano GitHub atual. O proprietário tornou o repositório público em 15/10/2026 para publicar esta prévia. A publicação usa `.github/workflows/pages.yml` na branch `work`; o build ajusta a base do Vite para `/Prospect-sNow/`.
 
 Após mudar a visibilidade em **Settings → General → Danger Zone → Change repository visibility**, configurar **Settings → Pages → Build and deployment → Source: GitHub Actions**. Enviar um commit à branch `work` ou executar manualmente o workflow `Publish web preview`. Confirmar que o job `deploy` terminou com sucesso e abrir <https://1victorneves2.github.io/Prospect-sNow/>. A URL não deve ser considerada publicada antes dessa verificação.
 

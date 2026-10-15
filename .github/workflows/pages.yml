@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/pages.yml'
       - 'apps/web/**'
+      - 'docs/WEB-PREVIEW.md'
       - 'package.json'
       - 'package-lock.json'
   workflow_dispatch:
