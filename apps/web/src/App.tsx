@@ -1,22 +1,16 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import {
   BarChart3,
-  Bell,
   Building2,
   ChevronDown,
-  CircleHelp,
-  ClipboardList,
   Command,
   ExternalLink,
-  Filter,
   LayoutDashboard,
   MapPin,
   MessageSquare,
   MoreHorizontal,
   Plus,
   Search,
-  Send,
-  Settings,
   Sparkles,
   Target,
   Users,
@@ -119,6 +113,19 @@ export function App() {
   const [query, setQuery] = useState('')
   const [showSearch, setShowSearch] = useState(false)
   const [selected, setSelected] = useState<Lead | null>(null)
+  const closeSearch = useCallback(() => setShowSearch(false), [])
+  const closeLead = useCallback(() => setSelected(null), [])
+
+  useEffect(() => {
+    function onKeyDown(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setShowSearch(true)
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const visibleLeads = useMemo(
     () =>
@@ -130,7 +137,7 @@ export function App() {
 
   function runDiscovery() {
     const newLead: Lead = {
-      id: Date.now(),
+      id: Math.max(...leads.map((lead) => lead.id)) + 1,
       name: 'Essência da Moda',
       segment: 'Moda e vestuário',
       region: 'Centro, Manaus',
@@ -163,28 +170,22 @@ export function App() {
             <button
               key={label}
               className={page === label ? 'nav-item active' : 'nav-item'}
+              aria-current={page === label ? 'page' : undefined}
               onClick={() => setPage(label)}
             >
               <Icon size={18} />
               {label}
-              {label === 'Leads' && <em>248</em>}
+              {label === 'Leads' && <em>{leads.length}</em>}
             </button>
           ))}
-          <p className="nav-label lower">SISTEMA</p>
-          <button className="nav-item">
-            <Settings size={18} />
-            Configurações
-          </button>
-          <button className="nav-item">
-            <CircleHelp size={18} />
-            Central de ajuda
-          </button>
+          <p className="nav-label lower">AMBIENTE</p>
+          <p className="sidebar-note">Prévia com dados fictícios. Nenhuma alteração é salva.</p>
         </nav>
         <div className="sidebar-footer">
           <div className="avatar">VM</div>
           <div>
-            <strong>Victor Martins</strong>
-            <small>Administrador</small>
+            <strong>Workspace demo</strong>
+            <small>Ambiente de demonstração</small>
           </div>
           <MoreHorizontal size={18} />
         </div>
@@ -197,24 +198,44 @@ export function App() {
             <b>/</b>
             <strong>{page}</strong>
           </div>
+          <div className="mobile-brand">
+            <span className="brand-mark">✦</span> snowdrop <b>prospect</b>
+          </div>
           <div className="top-actions">
-            <button className="icon-button">
-              <Bell size={18} />
-              <i />
-            </button>
+            <span className="demo-pill">Prévia demonstrativa</span>
             <button className="command" onClick={() => setShowSearch(true)}>
-              <Command size={15} /> Buscar <kbd>⌘ K</kbd>
+              <Command size={15} /> Buscar <kbd>⌘/Ctrl K</kbd>
             </button>
             <button className="new-search" onClick={() => setPage('Descoberta')}>
               <Plus size={17} /> Nova pesquisa
             </button>
           </div>
         </header>
+        <nav className="mobile-nav" aria-label="Navegação principal">
+          {nav.map(([label, Icon]) => (
+            <button
+              key={label}
+              className={page === label ? 'active' : ''}
+              aria-current={page === label ? 'page' : undefined}
+              onClick={() => setPage(label)}
+            >
+              <Icon size={17} /> <span>{label}</span>
+            </button>
+          ))}
+        </nav>
         <section className="content">
+          <div className="demo-banner" role="status">
+            <Sparkles size={17} />
+            <span>
+              <strong>Interface em construção.</strong> Empresas, indicadores e diagnósticos abaixo
+              são exemplos fictícios; mudanças são temporárias.
+            </span>
+          </div>
           {page === 'Visão geral' && (
             <Overview
               leads={leads}
               onViewPipeline={() => setPage('Pipeline')}
+              onViewLeads={() => setPage('Leads')}
               onSelect={setSelected}
             />
           )}
@@ -229,7 +250,7 @@ export function App() {
       </main>
       {showSearch && (
         <SearchOverlay
-          onClose={() => setShowSearch(false)}
+          onClose={closeSearch}
           onSelect={(lead) => {
             setSelected(lead)
             setShowSearch(false)
@@ -240,7 +261,7 @@ export function App() {
       {selected && (
         <LeadDrawer
           lead={selected}
-          onClose={() => setSelected(null)}
+          onClose={closeLead}
           onMove={(stage) => {
             setLeads((all) => all.map((x) => (x.id === selected.id ? { ...x, stage } : x)))
             setSelected({ ...selected, stage })
@@ -254,57 +275,58 @@ export function App() {
 function Overview({
   leads,
   onViewPipeline,
+  onViewLeads,
   onSelect,
 }: {
   leads: Lead[]
   onViewPipeline: () => void
+  onViewLeads: () => void
   onSelect: (lead: Lead) => void
 }) {
   return (
     <>
       <div className="page-heading">
         <div>
-          <p className="eyebrow">QUARTA-FEIRA, 8 DE OUTUBRO</p>
+          <p className="eyebrow">PAINEL DEMONSTRATIVO</p>
           <h1>
-            Bom dia, Victor <span>✦</span>
+            Sua operação em foco <span>✦</span>
           </h1>
-          <p className="subtle">Aqui está o resumo da sua operação comercial.</p>
+          <p className="subtle">Explore a futura central de prospecção da Snowdrop.</p>
         </div>
-        <button className="outline-button">
-          <ClipboardList size={17} /> Ver atividades
-        </button>
       </div>
       <div className="kpi-grid">
         <Metric
           icon={<Users />}
           label="Leads descobertos"
-          value="248"
-          delta="+12%"
-          detail="vs. período anterior"
+          value={String(leads.length)}
+          delta="Exemplos"
+          detail="na prévia"
           tone="purple"
         />
         <Metric
           icon={<Sparkles />}
           label="Oportunidades altas"
-          value="64"
-          delta="+8"
-          detail="esta semana"
+          value={String(leads.filter((lead) => lead.score >= 80).length)}
+          delta="Score ≥ 80"
+          detail="ilustrativo"
           tone="orange"
         />
         <Metric
           icon={<MessageSquare />}
           label="Conversas em andamento"
-          value="18"
-          delta="6"
-          detail="aguardando resposta"
+          value={String(
+            leads.filter((lead) => ['Contatado', 'Respondeu'].includes(lead.stage)).length,
+          )}
+          delta="Etapas"
+          detail="de exemplo"
           tone="blue"
         />
         <Metric
           icon={<Target />}
           label="Contratos fechados"
-          value="6"
-          delta="R$ 42,8k"
-          detail="em receita potencial"
+          value={String(leads.filter((lead) => lead.stage === 'Fechado').length)}
+          delta="Sem receita"
+          detail="real nesta prévia"
           tone="green"
         />
       </div>
@@ -313,48 +335,53 @@ function Overview({
           <PanelHead title="Funil de prospecção" action="Ver pipeline" onAction={onViewPipeline} />
           <div className="funnel-visual">
             <div className="funnel-chart">
-              {[
-                ['Descobertos', 248, 100],
-                ['Qualificados', 126, 72],
-                ['Contatados', 64, 49],
-                ['Responderam', 28, 29],
-                ['Reuniões', 18, 20],
-                ['Fechados', 6, 9],
-              ].map(([label, value, width]) => (
-                <div className="funnel-row" key={String(label)}>
-                  <span>{label}</span>
-                  <div>
-                    <i style={{ width: `${width}%` }} />
+              {(
+                [
+                  'Descoberto',
+                  'Analisado',
+                  'Contatado',
+                  'Respondeu',
+                  'Reunião',
+                  'Fechado',
+                ] as Stage[]
+              ).map((stage) => {
+                const count = leads.filter((lead) => lead.stage === stage).length
+                return (
+                  <div className="funnel-row" key={stage}>
+                    <span>{stage}</span>
+                    <div>
+                      <i style={{ width: `${leads.length ? (count / leads.length) * 100 : 0}%` }} />
+                    </div>
+                    <b>{count}</b>
                   </div>
-                  <b>{value}</b>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         </section>
         <section className="panel attention">
-          <PanelHead title="Precisa de atenção" action="Ver todos" />
+          <PanelHead title="Antes de começar" />
           <div className="attention-list">
             <Attention
-              title="5 leads aguardam follow-up"
-              detail="Último contato há mais de 3 dias"
+              title="Definir direção visual"
+              detail="Revisar a experiência antes de conectar dados reais"
               tone="orange"
             />
             <Attention
-              title="3 mensagens precisam de aprovação"
-              detail="Rascunhos gerados pela IA"
+              title="Conectar dados e autenticação"
+              detail="Os exemplos atuais não são persistidos"
               tone="purple"
             />
             <Attention
-              title="2 reuniões esta semana"
-              detail="Confira os detalhes no pipeline"
+              title="Revisar cada contato"
+              detail="Mensagens nunca serão enviadas automaticamente"
               tone="blue"
             />
           </div>
         </section>
       </div>
       <section className="panel recent">
-        <PanelHead title="Leads recentes" action="Ver todos" />
+        <PanelHead title="Leads de exemplo" action="Ver todos" onAction={onViewLeads} />
         <div className="table-wrap">
           <table>
             <thead>
@@ -408,14 +435,18 @@ function Discovery({ onRun }: { onRun: () => void }) {
             Localização <span>Obrigatório</span>
             <div className="input-icon">
               <MapPin size={17} />
-              <input defaultValue="Manaus, Amazonas" />
+              <input defaultValue="Manaus, Amazonas" aria-label="Localização" />
             </div>
           </label>
           <label>
             Segmento ou palavra-chave{' '}
             <div className="input-icon">
               <Building2 size={17} />
-              <input value={segment} onChange={(e) => setSegment(e.target.value)} />
+              <input
+                value={segment}
+                onChange={(e) => setSegment(e.target.value)}
+                aria-label="Segmento ou palavra-chave"
+              />
             </div>
           </label>
           <div className="form-cols">
@@ -439,13 +470,13 @@ function Discovery({ onRun }: { onRun: () => void }) {
           <div className="notice">
             <Sparkles size={17} />
             <div>
-              <strong>Pesquisa consciente</strong>
-              <br />A busca usa a integração oficial do Google Places. Revise os resultados antes de
-              criar leads.
+              <strong>Simulação de descoberta</strong>
+              <br />A integração com Google Places ainda não está ativa. Este botão adiciona um
+              exemplo temporário para explorar a interface.
             </div>
           </div>
           <button className="primary large" onClick={onRun}>
-            <Search size={18} /> Preparar busca
+            <Search size={18} /> Simular resultado
           </button>
         </section>
         <aside className="discovery-note">
@@ -494,9 +525,7 @@ function Leads({
           <h1>Leads</h1>
           <p className="subtle">Empresas encontradas, analisadas e acompanhadas pela Snowdrop.</p>
         </div>
-        <button className="primary">
-          <Plus size={17} /> Adicionar lead
-        </button>
+        <span className="section-hint">Dados fictícios · sem salvamento</span>
       </div>
       <section className="panel leads-panel">
         <div className="lead-tools">
@@ -508,9 +537,6 @@ function Leads({
               onChange={(e) => onQuery(e.target.value)}
             />
           </div>
-          <button className="outline-button">
-            <Filter size={16} /> Filtros <span className="filter-count">2</span>
-          </button>
           <span>{leads.length} leads</span>
         </div>
         <div className="table-wrap">
@@ -527,6 +553,13 @@ function Leads({
               </tr>
             </thead>
             <tbody>
+              {leads.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="table-empty">
+                    Nenhum lead corresponde à busca. Tente outro nome, segmento ou região.
+                  </td>
+                </tr>
+              )}
               {leads.map((l) => (
                 <LeadRow lead={l} key={l.id} onClick={() => onSelect(l)} />
               ))}
@@ -570,13 +603,10 @@ function Messages() {
           Trabalho com desenvolvimento e inteligência comercial. Se fizer sentido, podemos marcar
           uma conversa rápida para eu mostrar como funcionaria? 😊
         </div>
-        <div className="message-actions">
-          <button className="outline-button">Regenerar</button>
-          <button className="outline-button">Salvar rascunho</button>
-          <button className="primary">
-            <Send size={16} /> Aprovar mensagem
-          </button>
-        </div>
+        <p className="message-disclaimer">
+          Exemplo ilustrativo. A geração, edição e aprovação estarão disponíveis após a conexão com
+          a API.
+        </p>
       </section>
     </>
   )
@@ -599,9 +629,7 @@ function Pipeline({ leads, onSelect }: { leads: Lead[]; onSelect: (lead: Lead) =
           <h1>Pipeline comercial</h1>
           <p className="subtle">Acompanhe cada conversa até o fechamento.</p>
         </div>
-        <button className="primary">
-          <Plus size={17} /> Nova oportunidade
-        </button>
+        <span className="section-hint">Visualização demonstrativa</span>
       </div>
       <div className="kanban">
         {stages.map((stage) => (
@@ -626,9 +654,6 @@ function Pipeline({ leads, onSelect }: { leads: Lead[]; onSelect: (lead: Lead) =
                   </footer>
                 </button>
               ))}
-            <button className="add-card">
-              <Plus size={15} /> Adicionar
-            </button>
           </div>
         ))}
       </div>
@@ -656,12 +681,18 @@ function Reports() {
 
 function LeadRow({ lead, onClick }: { lead: Lead; onClick: () => void }) {
   return (
-    <tr onClick={onClick}>
+    <tr>
       <td>
         <div className="company-cell">
           <span className="company-logo small">{lead.name.slice(0, 2).toUpperCase()}</span>
           <div>
-            <strong>{lead.name}</strong>
+            <button
+              className="company-link"
+              onClick={onClick}
+              aria-label={`Abrir detalhes de ${lead.name}`}
+            >
+              {lead.name}
+            </button>
             <small>{lead.phone ? 'Telefone disponível' : 'Contato a verificar'}</small>
           </div>
         </div>
@@ -676,7 +707,13 @@ function LeadRow({ lead, onClick }: { lead: Lead; onClick: () => void }) {
       </td>
       <td>{lead.updated}</td>
       <td>
-        <MoreHorizontal size={18} />
+        <button
+          className="row-action"
+          onClick={onClick}
+          aria-label={`Abrir detalhes de ${lead.name}`}
+        >
+          <ExternalLink size={17} />
+        </button>
       </td>
     </tr>
   )
@@ -713,15 +750,17 @@ function PanelHead({
   onAction,
 }: {
   title: string
-  action: string
+  action?: string
   onAction?: () => void
 }) {
   return (
     <div className="panel-head">
       <h2>{title}</h2>
-      <button onClick={onAction}>
-        {action} <span>→</span>
-      </button>
+      {onAction && (
+        <button onClick={onAction}>
+          {action} <span>→</span>
+        </button>
+      )}
     </div>
   )
 }
@@ -746,15 +785,40 @@ function SearchOverlay({
   onSelect: (l: Lead) => void
   leads: Lead[]
 }) {
+  const [search, setSearch] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const results = leads.filter((lead) =>
+    `${lead.name} ${lead.segment} ${lead.region}`
+      .toLowerCase()
+      .includes(search.trim().toLowerCase()),
+  )
+
+  useDialogFocus(dialogRef, inputRef, onClose)
+
   return (
     <div className="overlay" onMouseDown={onClose}>
-      <div className="quick-search" onMouseDown={(e) => e.stopPropagation()}>
+      <div
+        ref={dialogRef}
+        className="quick-search"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Buscar leads de exemplo"
+        onMouseDown={(e) => e.stopPropagation()}
+      >
         <div className="input-icon">
           <Search />
-          <input autoFocus placeholder="Buscar empresa..." />
+          <input
+            ref={inputRef}
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Buscar empresa, segmento ou região..."
+            aria-label="Buscar leads"
+          />
         </div>
-        <p>LEADS RECENTES</p>
-        {leads.slice(0, 4).map((l) => (
+        <p>LEADS DE EXEMPLO</p>
+        {results.length === 0 && <p className="search-empty">Nenhum resultado encontrado.</p>}
+        {results.map((l) => (
           <button key={l.id} onClick={() => onSelect(l)}>
             <span className="company-logo small">{l.name.slice(0, 2)}</span>
             <span>
@@ -765,7 +829,7 @@ function SearchOverlay({
           </button>
         ))}
         <footer>
-          <kbd>ESC</kbd> para fechar
+          <kbd>ESC</kbd> para fechar <button onClick={onClose}>Fechar</button>
         </footer>
       </div>
     </div>
@@ -780,14 +844,30 @@ function LeadDrawer({
   onClose: () => void
   onMove: (stage: Stage) => void
 }) {
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const dialogRef = useRef<HTMLElement>(null)
+  useDialogFocus(dialogRef, closeRef, onClose)
+
   return (
     <div className="drawer-layer" onMouseDown={onClose}>
-      <aside className="drawer" onMouseDown={(e) => e.stopPropagation()}>
-        <button className="drawer-close" onClick={onClose}>
+      <aside
+        ref={dialogRef}
+        className="drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="lead-drawer-title"
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+        <button
+          ref={closeRef}
+          className="drawer-close"
+          onClick={onClose}
+          aria-label="Fechar detalhes do lead"
+        >
           ×
         </button>
         <span className={`badge ${stageColor[lead.stage]}`}>{lead.stage}</span>
-        <h1>{lead.name}</h1>
+        <h1 id="lead-drawer-title">{lead.name}</h1>
         <p className="subtle">
           {lead.segment} · {lead.region}
         </p>
@@ -795,7 +875,7 @@ function LeadDrawer({
           <span className={`score ${scoreLevel(lead.score)}`}>{lead.score}</span>
           <div>
             <strong>Score de oportunidade</strong>
-            <p>Baseado em evidências registradas</p>
+            <p>Valor ilustrativo, sem cálculo real</p>
           </div>
         </div>
         <h3>Diagnóstico</h3>
@@ -808,7 +888,7 @@ function LeadDrawer({
                 ? 'O canal informado aponta para uma página agregadora de links.'
                 : 'Há presença digital registrada; a experiência ainda precisa de verificação.'}
           </p>
-          <small>Fonte: Google Places · verificado hoje</small>
+          <small>Exemplo fictício · fonte não verificada</small>
         </div>
         <div className="evidence">
           <span>HIPÓTESE COMERCIAL</span>
@@ -819,7 +899,11 @@ function LeadDrawer({
           <small>Confiança média · requer validação humana</small>
         </div>
         <h3>Atualizar etapa</h3>
-        <select value={lead.stage} onChange={(e) => onMove(e.target.value as Stage)}>
+        <select
+          aria-label="Etapa do lead demonstrativo"
+          value={lead.stage}
+          onChange={(e) => onMove(e.target.value as Stage)}
+        >
           {(
             [
               'Descoberto',
@@ -834,13 +918,54 @@ function LeadDrawer({
             <option key={s}>{s}</option>
           ))}
         </select>
-        <button className="primary drawer-cta">
-          <MessageSquare size={17} /> Gerar mensagem
-        </button>
+        <p className="section-hint">
+          Alteração temporária nesta prévia; geração de mensagem ainda indisponível.
+        </p>
       </aside>
     </div>
   )
 }
 function scoreLevel(score: number) {
   return score >= 80 ? 'high' : score >= 50 ? 'medium' : 'low'
+}
+
+function useDialogFocus(
+  dialogRef: RefObject<HTMLElement | null>,
+  initialFocusRef: RefObject<HTMLElement | null>,
+  onClose: () => void,
+) {
+  useEffect(() => {
+    const previousFocus =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null
+    initialFocusRef.current?.focus()
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        onClose()
+      }
+      if (event.key !== 'Tab' || !dialogRef.current) return
+
+      const focusable = [
+        ...dialogRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ]
+      const first = focusable[0]
+      const last = focusable.at(-1)
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last?.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      previousFocus?.focus()
+    }
+  }, [dialogRef, initialFocusRef, onClose])
 }
