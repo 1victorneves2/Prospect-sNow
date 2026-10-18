@@ -1,0 +1,134 @@
+[
+  {
+    "id": 1,
+    "name": "Bella Moda Feminina",
+    "segment": "Moda e vestuário",
+    "region": "Adrianópolis",
+    "score": 92,
+    "stage": "Analisado",
+    "phone": true,
+    "site": "Linktree",
+    "updated": "Hoje, 10:34"
+  },
+  {
+    "id": 2,
+    "name": "Maison Lune Semijoias",
+    "segment": "Semijoias",
+    "region": "Vieiralves",
+    "score": 86,
+    "stage": "Contatado",
+    "phone": true,
+    "site": "Ausente",
+    "updated": "Hoje, 09:22"
+  },
+  {
+    "id": 3,
+    "name": "Ateliê Aurora",
+    "segment": "Moda e vestuário",
+    "region": "Ponta Negra",
+    "score": 78,
+    "stage": "Descoberto",
+    "phone": false,
+    "site": "Ausente",
+    "updated": "Ontem"
+  },
+  {
+    "id": 4,
+    "name": "Studio Vivá",
+    "segment": "Clínica de estética",
+    "region": "Parque Dez",
+    "score": 71,
+    "stage": "Respondeu",
+    "phone": true,
+    "site": "Ativo",
+    "updated": "Ontem"
+  },
+  {
+    "id": 5,
+    "name": "Casa Forma Planejados",
+    "segment": "Móveis planejados",
+    "region": "Flores",
+    "score": 64,
+    "stage": "Reunião",
+    "phone": true,
+    "site": "Ativo",
+    "updated": "Segunda-feira"
+  },
+  {
+    "id": 6,
+    "name": "Essência da Moda e Acessórios",
+    "segment": "Moda e vestuário",
+    "region": "Centro, Manaus",
+    "score": 58,
+    "stage": "Proposta",
+    "phone": true,
+    "site": "Linktree",
+    "updated": "Terça-feira"
+  },
+  {
+    "id": 7,
+    "name": "Norte Criativo Papelaria e Presentes",
+    "segment": "Papelaria e presentes",
+    "region": "Dom Pedro",
+    "score": 47,
+    "stage": "Fechado",
+    "phone": false,
+    "site": "Ativo",
+    "updated": "12/10/2026"
+  },
+  {
+    "id": 8,
+    "name": "Flor de Castanheira Boutique",
+    "segment": "Moda e vestuário",
+    "region": "Aleixo",
+    "score": 83,
+    "stage": "Analisado",
+    "phone": true,
+    "site": "Ausente",
+    "updated": "11/10/2026"
+  },
+  {
+    "id": 9,
+    "name": "Raiz Amazônica Cosméticos Naturais",
+    "segment": "Beleza e cosméticos",
+    "region": "São Jorge",
+    "score": 35,
+    "stage": "Descoberto",
+    "phone": false,
+    "site": "Ausente",
+    "updated": "10/10/2026"
+  },
+  {
+    "id": 10,
+    "name": "Ótica Horizonte Manaus",
+    "segment": "Ótica",
+    "region": "Nossa Senhora das Graças",
+    "score": 74,
+    "stage": "Contatado",
+    "phone": true,
+    "site": "Ativo",
+    "updated": "09/10/2026"
+  },
+  {
+    "id": 11,
+    "name": "Café do Largo",
+    "segment": "Alimentação",
+    "region": "Centro",
+    "score": 69,
+    "stage": "Respondeu",
+    "phone": true,
+    "site": "Linktree",
+    "updated": "08/10/2026"
+  },
+  {
+    "id": 12,
+    "name": "Casa Ipê Móveis e Decoração",
+    "segment": "Móveis e decoração",
+    "region": "Cidade Nova",
+    "score": 52,
+    "stage": "Reunião",
+    "phone": false,
+    "site": "Ativo",
+    "updated": "07/10/2026"
+  }
+]

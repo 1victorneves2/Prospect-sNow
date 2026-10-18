@@ -8,6 +8,25 @@ describe('dados demonstrativos de leads', () => {
     expect(initialLeads.every((lead) => stageColor[lead.stage])).toBe(true)
   })
 
+  it('inclui valores demonstrativos para todas as etapas do pipeline', () => {
+    const stages = new Set(initialLeads.map((lead) => lead.stage))
+
+    expect(initialLeads).toHaveLength(12)
+    expect(stages).toEqual(
+      new Set([
+        'Descoberto',
+        'Analisado',
+        'Contatado',
+        'Respondeu',
+        'Reunião',
+        'Proposta',
+        'Fechado',
+      ]),
+    )
+    expect(initialLeads.some((lead) => !lead.phone)).toBe(true)
+    expect(initialLeads.some((lead) => lead.site === 'Ausente')).toBe(true)
+  })
+
   it('classifica as faixas de score corretamente', () => {
     expect(scoreLevel(49)).toBe('low')
     expect(scoreLevel(50)).toBe('medium')
