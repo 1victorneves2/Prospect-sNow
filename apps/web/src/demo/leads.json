@@ -130,5 +130,16 @@
     "phone": false,
     "site": "Ativo",
     "updated": "07/10/2026"
+  },
+  {
+    "id": 13,
+    "name": "Ateliê Amazonense de Moda Sustentável e Acessórios Artesanais da Floresta",
+    "segment": "Moda sustentável e acessórios artesanais",
+    "region": "Comunidade São João do Tupé, zona rural de Manaus",
+    "score": 43,
+    "stage": "Descoberto",
+    "phone": false,
+    "site": "Ausente",
+    "updated": "06/10/2026"
   }
 ]

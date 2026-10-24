@@ -815,6 +815,23 @@ select {
   color: #95909f;
   margin-left: auto;
 }
+.demo-state-control {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #898393;
+  font-size: 10px;
+}
+.demo-state-control select {
+  max-width: 145px;
+  padding: 7px 9px;
+  border: 1px solid #e7e2ed;
+  border-radius: 6px;
+  background: #fff;
+  color: #5d526c;
+  font: inherit;
+  font-size: 10px;
+}
 .message-panel {
   max-width: 760px;
   padding: 27px;
@@ -1136,6 +1153,45 @@ select {
 .drawer-cta:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+.lead-state {
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 28px;
+  color: #777181;
+  text-align: center;
+  font-size: 12px;
+}
+.lead-state strong {
+  color: #312a3e;
+  font-size: 14px;
+}
+.error-state button {
+  margin-top: 4px;
+  padding: 9px 14px;
+  border: 1px solid #dcd4e6;
+  border-radius: 6px;
+  background: #fff;
+  color: #665285;
+  font: inherit;
+  font-weight: 600;
+}
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e4dfee;
+  border-top-color: #8870b1;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 .pipeline-history {
   padding-left: 18px;

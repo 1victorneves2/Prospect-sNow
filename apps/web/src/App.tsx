@@ -15,6 +15,7 @@ import {
   Users,
 } from 'lucide-react'
 import { LeadDrawer } from './components/LeadDrawer'
+import { LeadResults } from './components/LeadResults'
 import { LeadRow } from './components/LeadRow'
 import { SearchOverlay } from './components/SearchOverlay'
 import { initialLeads, scoreLevel, stageColor, type Lead, type Stage } from './demo/leads'
@@ -38,6 +39,8 @@ const nav = [
   ['Relatórios', BarChart3],
 ] as const
 
+type LeadListScenario = 'ready' | 'empty' | 'loading' | 'error'
+
 export function App() {
   const [page, setPage] = useState('Visão geral')
   const [leads, setLeads] = useState(initialLeads)
@@ -45,6 +48,7 @@ export function App() {
   const [showSearch, setShowSearch] = useState(false)
   const [selected, setSelected] = useState<Lead | null>(null)
   const [pipelineHistory, setPipelineHistory] = useState<PipelineEvent[]>([])
+  const [leadListScenario, setLeadListScenario] = useState<LeadListScenario>('ready')
   const closeSearch = useCallback(() => setShowSearch(false), [])
   const closeLead = useCallback(() => setSelected(null), [])
 
@@ -173,7 +177,14 @@ export function App() {
           )}
           {page === 'Descoberta' && <Discovery onRun={runDiscovery} />}
           {page === 'Leads' && (
-            <Leads leads={visibleLeads} query={query} onQuery={setQuery} onSelect={setSelected} />
+            <Leads
+              leads={visibleLeads}
+              query={query}
+              scenario={leadListScenario}
+              onScenarioChange={setLeadListScenario}
+              onQuery={setQuery}
+              onSelect={setSelected}
+            />
           )}
           {page === 'Mensagens' && <Messages />}
           {page === 'Pipeline' && <Pipeline leads={leads} onSelect={setSelected} />}
@@ -454,11 +465,15 @@ function Discovery({ onRun }: { onRun: () => void }) {
 function Leads({
   leads,
   query,
+  scenario,
+  onScenarioChange,
   onQuery,
   onSelect,
 }: {
   leads: Lead[]
   query: string
+  scenario: LeadListScenario
+  onScenarioChange: (scenario: LeadListScenario) => void
   onQuery: (s: string) => void
   onSelect: (lead: Lead) => void
 }) {
@@ -483,34 +498,27 @@ function Leads({
             />
           </div>
           <span>{leads.length} leads</span>
+          <label className="demo-state-control">
+            Cenário de teste
+            <select
+              aria-label="Cenário demonstrativo da lista de leads"
+              value={scenario}
+              onChange={(event) => onScenarioChange(event.target.value as LeadListScenario)}
+            >
+              <option value="ready">Com resultados</option>
+              <option value="empty">Base vazia</option>
+              <option value="loading">Carregando</option>
+              <option value="error">Erro</option>
+            </select>
+          </label>
         </div>
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>EMPRESA</th>
-                <th>SEGMENTO</th>
-                <th>REGIÃO</th>
-                <th>SCORE</th>
-                <th>ETAPA</th>
-                <th>ATUALIZADO</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {leads.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="table-empty">
-                    Nenhum lead corresponde à busca. Tente outro nome, segmento ou região.
-                  </td>
-                </tr>
-              )}
-              {leads.map((l) => (
-                <LeadRow lead={l} key={l.id} onClick={() => onSelect(l)} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <LeadResults
+          leads={leads}
+          query={query}
+          status={scenario}
+          onRetry={() => onScenarioChange('ready')}
+          onSelect={onSelect}
+        />
       </section>
     </>
   )
