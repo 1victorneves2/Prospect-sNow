@@ -1116,6 +1116,48 @@ select {
 .drawer select {
   margin: 0;
 }
+.transition-reason-label {
+  display: block;
+  margin: 12px 0 6px;
+  color: #6c6475;
+  font-size: 11px;
+  font-weight: 600;
+}
+.drawer textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #e5e0eb;
+  border-radius: 6px;
+  padding: 10px;
+  color: #292433;
+  font: inherit;
+  font-size: 12px;
+}
+.drawer-cta:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.pipeline-history {
+  padding-left: 18px;
+}
+.pipeline-history li {
+  margin: 12px 0;
+  color: #6c6475;
+  font-size: 11px;
+}
+.pipeline-history strong,
+.pipeline-history span,
+.pipeline-history small {
+  display: block;
+  margin-bottom: 4px;
+}
+.pipeline-history strong {
+  color: #312a3e;
+}
+.pipeline-history small {
+  color: #908a98;
+  font-size: 9px;
+}
 .drawer-cta {
   margin-top: 15px;
   width: 100%;

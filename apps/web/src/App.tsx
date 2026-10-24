@@ -18,6 +18,16 @@ import { LeadDrawer } from './components/LeadDrawer'
 import { LeadRow } from './components/LeadRow'
 import { SearchOverlay } from './components/SearchOverlay'
 import { initialLeads, scoreLevel, stageColor, type Lead, type Stage } from './demo/leads'
+import { canTransition } from './demo/pipeline'
+
+type PipelineEvent = {
+  leadId: number
+  from: Stage
+  to: Stage
+  reason: string
+  changedAt: string
+  actor: string
+}
 
 const nav = [
   ['Visão geral', LayoutDashboard],
@@ -34,6 +44,7 @@ export function App() {
   const [query, setQuery] = useState('')
   const [showSearch, setShowSearch] = useState(false)
   const [selected, setSelected] = useState<Lead | null>(null)
+  const [pipelineHistory, setPipelineHistory] = useState<PipelineEvent[]>([])
   const closeSearch = useCallback(() => setShowSearch(false), [])
   const closeLead = useCallback(() => setSelected(null), [])
 
@@ -183,9 +194,22 @@ export function App() {
         <LeadDrawer
           lead={selected}
           onClose={closeLead}
-          onMove={(stage) => {
-            setLeads((all) => all.map((x) => (x.id === selected.id ? { ...x, stage } : x)))
-            setSelected({ ...selected, stage })
+          history={pipelineHistory.filter((event) => event.leadId === selected.id)}
+          onMove={(stage, reason) => {
+            if (!canTransition(selected.stage, stage)) return
+            const event: PipelineEvent = {
+              leadId: selected.id,
+              from: selected.stage,
+              to: stage,
+              reason,
+              changedAt: new Date().toISOString(),
+              actor: 'Workspace demo',
+            }
+            setPipelineHistory((events) => [event, ...events])
+            setLeads((all) =>
+              all.map((lead) => (lead.id === selected.id ? { ...lead, stage } : lead)),
+            )
+            setSelected((lead) => (lead ? { ...lead, stage } : lead))
           }}
         />
       )}

@@ -1,18 +1,23 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { scoreLevel, stageColor, type Lead, type Stage } from '../demo/leads'
+import { allowedTransitions, isValidTransitionReason } from '../demo/pipeline'
 import { useDialogFocus } from './useDialogFocus'
 
 export function LeadDrawer({
   lead,
   onClose,
   onMove,
+  history,
 }: {
   lead: Lead
   onClose: () => void
-  onMove: (stage: Stage) => void
+  onMove: (stage: Stage, reason: string) => void
+  history: { from: Stage; to: Stage; reason: string; changedAt: string; actor: string }[]
 }) {
   const closeRef = useRef<HTMLButtonElement>(null)
   const dialogRef = useRef<HTMLElement>(null)
+  const [nextStage, setNextStage] = useState<Stage | ''>('')
+  const [reason, setReason] = useState('')
   useDialogFocus(dialogRef, closeRef, onClose)
 
   return (
@@ -68,25 +73,58 @@ export function LeadDrawer({
         <h3>Atualizar etapa</h3>
         <select
           aria-label="Etapa do lead demonstrativo"
-          value={lead.stage}
-          onChange={(e) => onMove(e.target.value as Stage)}
+          value={nextStage}
+          onChange={(e) => setNextStage(e.target.value as Stage | '')}
         >
-          {(
-            [
-              'Descoberto',
-              'Analisado',
-              'Contatado',
-              'Respondeu',
-              'Reunião',
-              'Proposta',
-              'Fechado',
-            ] as Stage[]
-          ).map((s) => (
+          <option value="">Selecione uma etapa permitida</option>
+          {allowedTransitions(lead.stage).map((s) => (
             <option key={s}>{s}</option>
           ))}
         </select>
+        <label className="transition-reason-label" htmlFor="transition-reason">
+          Motivo da mudança
+        </label>
+        <textarea
+          id="transition-reason"
+          value={reason}
+          onChange={(event) => setReason(event.target.value)}
+          placeholder="Ex.: cliente respondeu e pediu uma reunião"
+          rows={3}
+        />
+        <button
+          className="drawer-cta"
+          disabled={!nextStage || !isValidTransitionReason(reason)}
+          onClick={() => {
+            if (nextStage && isValidTransitionReason(reason)) {
+              onMove(nextStage, reason.trim())
+              setNextStage('')
+              setReason('')
+            }
+          }}
+        >
+          Registrar mudança
+        </button>
+        <h3>Histórico de mudanças</h3>
+        {history.length === 0 ? (
+          <p className="section-hint">Nenhuma mudança de etapa nesta sessão demonstrativa.</p>
+        ) : (
+          <ol className="pipeline-history">
+            {history.map((event, index) => (
+              <li key={`${event.changedAt}-${index}`}>
+                <strong>
+                  {event.from} → {event.to}
+                </strong>
+                <span>{event.reason}</span>
+                <small>
+                  {event.actor} · {new Date(event.changedAt).toLocaleString('pt-BR')}
+                </small>
+              </li>
+            ))}
+          </ol>
+        )}
         <p className="section-hint">
-          Alteração temporária nesta prévia; geração de mensagem ainda indisponível.
+          Histórico temporário, removido ao atualizar a página; geração de mensagem ainda
+          indisponível.
         </p>
       </aside>
     </div>
