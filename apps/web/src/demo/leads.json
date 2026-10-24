@@ -141,5 +141,192 @@
     "phone": false,
     "site": "Ausente",
     "updated": "06/10/2026"
+  },
+  {
+    "id": 14,
+    "name": "Malva Brechó Circular",
+    "segment": "Moda circular",
+    "region": "Cachoeirinha",
+    "score": 61,
+    "stage": "Analisado",
+    "phone": true,
+    "site": "Linktree",
+    "updated": "05/10/2026"
+  },
+  {
+    "id": 15,
+    "name": "Nativa Fitwear",
+    "segment": "Moda fitness",
+    "region": "Japiim",
+    "score": 88,
+    "stage": "Contatado",
+    "phone": true,
+    "site": "Ativo",
+    "updated": "04/10/2026"
+  },
+  {
+    "id": 16,
+    "name": "Casa Maniva Decor",
+    "segment": "Decoração",
+    "region": "Planalto",
+    "score": 55,
+    "stage": "Descoberto",
+    "phone": false,
+    "site": "Ausente",
+    "updated": "03/10/2026"
+  },
+  {
+    "id": 17,
+    "name": "Bela Pele Estética Integrada",
+    "segment": "Clínica de estética",
+    "region": "Compensa",
+    "score": 73,
+    "stage": "Respondeu",
+    "phone": true,
+    "site": "Ativo",
+    "updated": "02/10/2026"
+  },
+  {
+    "id": 18,
+    "name": "Rio Negro Calçados",
+    "segment": "Calçados",
+    "region": "Alvorada",
+    "score": 66,
+    "stage": "Reunião",
+    "phone": true,
+    "site": "Linktree",
+    "updated": "01/10/2026"
+  },
+  {
+    "id": 19,
+    "name": "Pérola do Norte Acessórios",
+    "segment": "Acessórios",
+    "region": "São José Operário",
+    "score": 81,
+    "stage": "Proposta",
+    "phone": true,
+    "site": "Ativo",
+    "updated": "30/09/2026"
+  },
+  {
+    "id": 20,
+    "name": "Mimo de Casa Presentes",
+    "segment": "Presentes",
+    "region": "Redenção",
+    "score": 48,
+    "stage": "Fechado",
+    "phone": false,
+    "site": "Ausente",
+    "updated": "29/09/2026"
+  },
+  {
+    "id": 21,
+    "name": "Tucumã Joias Autorais",
+    "segment": "Joalheria",
+    "region": "Nossa Senhora das Graças",
+    "score": 90,
+    "stage": "Analisado",
+    "phone": true,
+    "site": "Ativo",
+    "updated": "28/09/2026"
+  },
+  {
+    "id": 22,
+    "name": "Sabor de Casa Restaurante Regional",
+    "segment": "Alimentação",
+    "region": "Educandos",
+    "score": 59,
+    "stage": "Descoberto",
+    "phone": false,
+    "site": "Linktree",
+    "updated": "27/09/2026"
+  },
+  {
+    "id": 23,
+    "name": "Mosaico Arquitetura e Interiores",
+    "segment": "Arquitetura",
+    "region": "Tarumã",
+    "score": 77,
+    "stage": "Contatado",
+    "phone": true,
+    "site": "Ativo",
+    "updated": "26/09/2026"
+  },
+  {
+    "id": 24,
+    "name": "Dona Onça Doceria Artesanal",
+    "segment": "Alimentação",
+    "region": "Colônia Santo Antônio",
+    "score": 68,
+    "stage": "Respondeu",
+    "phone": true,
+    "site": "Ausente",
+    "updated": "25/09/2026"
+  },
+  {
+    "id": 25,
+    "name": "Verde Vida Produtos Naturais",
+    "segment": "Produtos naturais",
+    "region": "Lírio do Vale",
+    "score": 42,
+    "stage": "Descoberto",
+    "phone": false,
+    "site": "Ausente",
+    "updated": "24/09/2026"
+  },
+  {
+    "id": 26,
+    "name": "Ponto Norte Papelaria Criativa",
+    "segment": "Papelaria",
+    "region": "Cidade de Deus",
+    "score": 71,
+    "stage": "Reunião",
+    "phone": true,
+    "site": "Linktree",
+    "updated": "23/09/2026"
+  },
+  {
+    "id": 27,
+    "name": "Arumã Bolsas e Acessórios Feitos à Mão",
+    "segment": "Acessórios artesanais",
+    "region": "Colônia Antônio Aleixo",
+    "score": 63,
+    "stage": "Analisado",
+    "phone": false,
+    "site": "Ativo",
+    "updated": "22/09/2026"
+  },
+  {
+    "id": 28,
+    "name": "Essencial Odontologia e Estética",
+    "segment": "Clínica odontológica",
+    "region": "Santa Etelvina",
+    "score": 84,
+    "stage": "Contatado",
+    "phone": true,
+    "site": "Ativo",
+    "updated": "21/09/2026"
+  },
+  {
+    "id": 29,
+    "name": "Canoa Boutique Infantil",
+    "segment": "Moda infantil",
+    "region": "Nossa Senhora de Fátima",
+    "score": 57,
+    "stage": "Descoberto",
+    "phone": false,
+    "site": "Ausente",
+    "updated": "20/09/2026"
+  },
+  {
+    "id": 30,
+    "name": "Estação das Plantas Garden Center",
+    "segment": "Jardinagem",
+    "region": "Petrópolis",
+    "score": 76,
+    "stage": "Proposta",
+    "phone": true,
+    "site": "Linktree",
+    "updated": "19/09/2026"
   }
 ]

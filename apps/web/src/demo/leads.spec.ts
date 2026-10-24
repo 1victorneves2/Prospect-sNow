@@ -11,7 +11,7 @@ describe('dados demonstrativos de leads', () => {
   it('inclui valores demonstrativos para todas as etapas do pipeline', () => {
     const stages = new Set(initialLeads.map((lead) => lead.stage))
 
-    expect(initialLeads).toHaveLength(13)
+    expect(initialLeads).toHaveLength(30)
     expect(stages).toEqual(
       new Set([
         'Descoberto',
