@@ -2,6 +2,8 @@
 
 Análise do [backlog no Notion](https://app.notion.com/p/bc7ff81ee55e41b7aee680f3d326cfe0?pvs=204), consultado em 9 de novembro de 2026. Este documento é um retrato de planejamento; os estados reais precisam ser confirmados antes de executar.
 
+**Atualização de execução, 9 de novembro de 2026:** o cliente Prisma foi gerado e a API executou uma consulta de saúde em PostgreSQL temporário local. Sem configuração de banco, a API continua iniciando para uso demonstrativo e a rota de saúde do banco responde 503 seguro. O modelo Prisma foi corrigido para permitir a geração. A instância usada era temporária; a primeira migration, autenticação e CRUD de leads continuam pendentes. O Notion não foi atualizado.
+
 ## Recomendação: validar persistência real
 
 A menor fatia de alto impacto é conectar a API a um PostgreSQL de desenvolvimento, gerar o Prisma Client e comprovar uma consulta de saúde real. Isso aproveita o trabalho já iniciado e prepara a primeira migration e a API persistente de leads.

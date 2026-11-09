@@ -10,22 +10,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole { ADMIN MEMBER }
-enum LeadStatus { DISCOVERED ANALYZED CONTACTED RESPONDED MEETING PROPOSAL WON LOST }
-enum Confidence { LOW MEDIUM HIGH }
-enum EvidenceKind { WEBSITE SOCIAL_PROFILE BUSINESS_PROFILE CATALOG MANUAL_NOTE }
-enum ActivityType { NOTE STATUS_CHANGED OUTREACH_APPROVED OUTREACH_SENT REPLY MEETING PROPOSAL FOLLOW_UP DO_NOT_CONTACT }
-enum OutreachStatus { DRAFT APPROVED SENT ARCHIVED }
-enum OpportunityStage { QUALIFIED MEETING PROPOSAL WON LOST }
-enum SearchJobStatus { QUEUED RUNNING COMPLETED FAILED CANCELLED }
+enum UserRole {
+  ADMIN
+  MEMBER
+}
+
+enum LeadStatus {
+  DISCOVERED
+  ANALYZED
+  CONTACTED
+  RESPONDED
+  MEETING
+  PROPOSAL
+  WON
+  LOST
+}
+
+enum Confidence {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum EvidenceKind {
+  WEBSITE
+  SOCIAL_PROFILE
+  BUSINESS_PROFILE
+  CATALOG
+  MANUAL_NOTE
+}
+
+enum ActivityType {
+  NOTE
+  STATUS_CHANGED
+  OUTREACH_APPROVED
+  OUTREACH_SENT
+  REPLY
+  MEETING
+  PROPOSAL
+  FOLLOW_UP
+  DO_NOT_CONTACT
+}
+
+enum OutreachStatus {
+  DRAFT
+  APPROVED
+  SENT
+  ARCHIVED
+}
+
+enum OpportunityStage {
+  QUALIFIED
+  MEETING
+  PROPOSAL
+  WON
+  LOST
+}
+
+enum SearchJobStatus {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
 
 model Organization {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  users     User[]
-  leads     Lead[]
+  id         String      @id @default(cuid())
+  name       String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  users      User[]
+  leads      Lead[]
   searchJobs SearchJob[]
 }
 
@@ -43,7 +99,7 @@ model User {
 }
 
 model Lead {
-  id             String     @id @default(cuid())
+  id             String                  @id @default(cuid())
   organizationId String
   createdById    String?
   name           String
@@ -54,68 +110,68 @@ model Lead {
   phone          String?
   websiteUrl     String?
   mapsUrl        String?
-  status         LeadStatus @default(DISCOVERED)
-  score          Int        @default(0)
+  status         LeadStatus              @default(DISCOVERED)
+  score          Int                     @default(0)
   scoreBreakdown Json?
-  doNotContact   Boolean    @default(false)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  createdBy      User?      @relation("LeadCreator", fields: [createdById], references: [id])
+  doNotContact   Boolean                 @default(false)
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  organization   Organization            @relation(fields: [organizationId], references: [id])
+  createdBy      User?                   @relation("LeadCreator", fields: [createdById], references: [id])
   placeReference ExternalPlaceReference?
   evidence       LeadEvidence[]
   analyses       LeadAnalysis[]
   outreachDrafts OutreachDraft[]
-  activities     Activity[] 
+  activities     Activity[]
   opportunity    Opportunity?
 
+  @@unique([organizationId, normalizedName, city])
   @@index([organizationId, status])
   @@index([organizationId, score])
-  @@unique([organizationId, normalizedName, city])
 }
 
 model ExternalPlaceReference {
-  id             String   @id @default(cuid())
-  leadId         String   @unique
-  provider       String   @default("google_places")
+  id             String    @id @default(cuid())
+  leadId         String    @unique
+  provider       String    @default("google_places")
   externalId     String
-  fetchedAt      DateTime @default(now())
+  fetchedAt      DateTime  @default(now())
   retentionUntil DateTime?
   sourceUrl      String?
-  lead           Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  lead           Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   @@unique([provider, externalId])
 }
 
 model LeadEvidence {
-  id          String       @id @default(cuid())
-  leadId      String
-  kind        EvidenceKind
-  statement   String
-  sourceUrl   String
-  observedAt  DateTime
-  verifiedAt  DateTime     @default(now())
-  expiresAt   DateTime?
-  confidence  Confidence   @default(MEDIUM)
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  lead        Lead         @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  id         String       @id @default(cuid())
+  leadId     String
+  kind       EvidenceKind
+  statement  String
+  sourceUrl  String
+  observedAt DateTime
+  verifiedAt DateTime     @default(now())
+  expiresAt  DateTime?
+  confidence Confidence   @default(MEDIUM)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  lead       Lead         @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   @@index([leadId, verifiedAt])
 }
 
 model LeadAnalysis {
-  id                    String     @id @default(cuid())
-  leadId                String
-  observedFacts         Json
-  commercialHypotheses  Json
-  recommendedService    String?
+  id                   String   @id @default(cuid())
+  leadId               String
+  observedFacts        Json
+  commercialHypotheses Json
+  recommendedService   String?
   score                Int
   scoreBreakdown       Json
   modelProvider        String?
   modelVersion         String?
-  createdAt            DateTime   @default(now())
-  lead                 Lead       @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  createdAt            DateTime @default(now())
+  lead                 Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
 
   @@index([leadId, createdAt])
 }
@@ -137,31 +193,31 @@ model OutreachDraft {
 }
 
 model Activity {
-  id        String       @id @default(cuid())
-  leadId    String
-  actorId   String?
-  type      ActivityType
-  body      String?
-  metadata  Json?
-  occurredAt DateTime    @default(now())
-  createdAt DateTime     @default(now())
-  lead      Lead         @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  actor     User?        @relation("ActivityActor", fields: [actorId], references: [id])
+  id         String       @id @default(cuid())
+  leadId     String
+  actorId    String?
+  type       ActivityType
+  body       String?
+  metadata   Json?
+  occurredAt DateTime     @default(now())
+  createdAt  DateTime     @default(now())
+  lead       Lead         @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  actor      User?        @relation("ActivityActor", fields: [actorId], references: [id])
 
   @@index([leadId, occurredAt])
 }
 
 model Opportunity {
-  id             String           @id @default(cuid())
-  leadId         String           @unique
+  id                 String           @id @default(cuid())
+  leadId             String           @unique
   recommendedService String?
-  estimatedValue Decimal?         @db.Decimal(12, 2)
-  probability    Int?
-  stage          OpportunityStage @default(QUALIFIED)
-  nextStepAt     DateTime?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  lead           Lead             @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  estimatedValue     Decimal?         @db.Decimal(12, 2)
+  probability        Int?
+  stage              OpportunityStage @default(QUALIFIED)
+  nextStepAt         DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  lead               Lead             @relation(fields: [leadId], references: [id], onDelete: Cascade)
 }
 
 model SearchJob {

@@ -3,11 +3,14 @@ import { BadRequestException, Controller, Get, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
 import { AddressInfo } from 'node:net'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import type { INestApplication } from '@nestjs/common'
 import { configureApp } from '../app.setup'
 import { validateEnvironment } from '../config/env.validation'
-import { HealthModule } from '../health/health.module'
+import { HealthController } from '../health/health.controller'
+import { PrismaService } from '../prisma/prisma.service'
+
+const checkConnection = vi.fn<() => Promise<void>>()
 
 @Controller('test-errors')
 class TestErrorsController {
@@ -23,8 +26,9 @@ class TestErrorsController {
 }
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, validate: validateEnvironment }), HealthModule],
-  controllers: [TestErrorsController],
+  imports: [ConfigModule.forRoot({ isGlobal: true, validate: validateEnvironment })],
+  controllers: [TestErrorsController, HealthController],
+  providers: [{ provide: PrismaService, useValue: { checkConnection } }],
 })
 class TestAppModule {}
 
@@ -51,6 +55,23 @@ describe('API HTTP contract', () => {
     expect(response.status).toBe(200)
     expect(response.headers.get('x-request-id')).toMatch(/^[0-9a-f-]{36}$/)
     expect(body).toMatchObject({ status: 'ok', service: 'snowdrop-prospect-api' })
+  })
+
+  it('reports database health only after a successful query', async () => {
+    checkConnection.mockResolvedValueOnce(undefined)
+    const response = await fetch(`${baseUrl}/v1/health/database`)
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual({ status: 'ok' })
+    expect(checkConnection).toHaveBeenCalled()
+  })
+
+  it('returns a safe error when the database is unavailable', async () => {
+    checkConnection.mockRejectedValueOnce(new Error('private-connection-string'))
+    const response = await fetch(`${baseUrl}/v1/health/database`)
+    const body = await response.json()
+    expect(response.status).toBe(503)
+    expect(body).toMatchObject({ code: 'SERVICE_UNAVAILABLE' })
+    expect(JSON.stringify(body)).not.toContain('private-connection-string')
   })
 
   it.each([

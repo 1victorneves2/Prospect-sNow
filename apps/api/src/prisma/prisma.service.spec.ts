@@ -11,4 +11,11 @@ describe('PrismaService', () => {
     expect(service.isConfigured).toBe(false)
     expect(() => service.db).toThrow('Database is not configured')
   })
+
+  it('fails safely when checking an unconfigured database', async () => {
+    const config = new ConfigService({}) as unknown as ConfigService<Environment, true>
+    await expect(new PrismaService(config).checkConnection()).rejects.toThrow(
+      'Database is not configured',
+    )
+  })
 })

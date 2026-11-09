@@ -32,9 +32,17 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.client
   }
 
+  async checkConnection(): Promise<void> {
+    await this.db.$queryRaw`SELECT 1`
+  }
+
   async onModuleInit() {
     if (this.client) {
-      await this.client.$connect()
+      try {
+        await this.client.$connect()
+      } catch {
+        throw new Error('Database connection failed')
+      }
     }
   }
 

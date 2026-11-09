@@ -15,6 +15,10 @@ const messages: Partial<Record<HttpStatus, { code: string; message: string }>> =
   [HttpStatus.NOT_FOUND]: { code: 'NOT_FOUND', message: 'Recurso não encontrado.' },
   [HttpStatus.CONFLICT]: { code: 'CONFLICT', message: 'Conflito ao processar a requisição.' },
   [HttpStatus.TOO_MANY_REQUESTS]: { code: 'RATE_LIMITED', message: 'Tente novamente mais tarde.' },
+  [HttpStatus.SERVICE_UNAVAILABLE]: {
+    code: 'SERVICE_UNAVAILABLE',
+    message: 'Serviço temporariamente indisponível.',
+  },
 }
 
 @Catch()

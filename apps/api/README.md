@@ -11,9 +11,10 @@ Na raiz do monorepo:
 npm run dev:api
 ```
 
-O healthcheck responde em `GET http://localhost:3000/v1/health`. Ele verifica se a
-API está viva; a disponibilidade do banco será verificada quando o banco for
-integrado.
+O healthcheck `GET http://localhost:3000/v1/health` verifica se a API está viva.
+`GET /v1/health/database` executa uma consulta simples ao PostgreSQL: responde 200
+quando o banco está acessível ou 503 sem detalhes de conexão quando não está. A API
+pode iniciar sem `DATABASE_URL` para a prévia local, mas a verificação do banco falha.
 
 Cada resposta inclui `X-Request-Id`. Os erros seguem o formato
 `{ "code": "...", "message": "...", "requestId": "..." }`. Os logs HTTP registram

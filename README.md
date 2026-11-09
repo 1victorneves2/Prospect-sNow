@@ -12,7 +12,7 @@ Esta primeira entrega implementa a base visual navegável do MVP com dados demon
 - Mensagem comercial para revisão e aprovação humana.
 - Pipeline comercial com movimentação de etapa em memória.
 
-Ainda não há persistência, autenticação, Google Places ou OpenAI conectados. Essas integrações devem ser implementadas no backend, mantendo chaves de API fora do navegador.
+A API NestJS possui configuração tipada e módulo Prisma. A conexão com PostgreSQL pode ser validada localmente; os dados da interface ainda são demonstrativos e não há CRUD persistente, autenticação, Google Places ou OpenAI conectados. Mantenha chaves de API fora do navegador.
 
 ## Executar
 
@@ -28,6 +28,7 @@ npm run dev:api
 ```
 
 O healthcheck da API está disponível em `http://localhost:3000/v1/health`.
+Para validar um PostgreSQL de desenvolvimento, configure `DATABASE_URL` no ambiente da API, execute `npx prisma generate --schema prisma/schema.prisma` na raiz e consulte `http://localhost:3000/v1/health/database`. A resposta é 200 após uma consulta real; sem banco configurado ou disponível, a verificação responde 503 sem detalhes da conexão. Não coloque credenciais no repositório.
 
 Para gerar o build de produção:
 
@@ -50,7 +51,7 @@ O hook de pre-commit formata e aplica lint nos arquivos alterados. A integraçã
 
 ## Próxima etapa técnica
 
-Adicionar a API NestJS, PostgreSQL e Prisma para persistir as entidades do documento mestre (`Lead`, `LeadEvidence`, `LeadAnalysis`, `OutreachDraft`, `Activity`, `Opportunity` e `SearchJob`), antes de habilitar integrações externas.
+Aplicar a primeira migration em um PostgreSQL de desenvolvimento e implementar autenticação e CRUD de leads antes de habilitar integrações externas. Veja [a análise do próximo ciclo](docs/PROXIMO-CICLO.md).
 
 ## Base técnica planejada
 
