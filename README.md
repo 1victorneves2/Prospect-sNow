@@ -17,7 +17,8 @@ A API NestJS possui configuração tipada e módulo Prisma. A conexão com Postg
 ## Executar
 
 Para preparar outro computador, configurar PostgreSQL e aplicar as migrações, siga o
-[guia de instalação local](docs/INSTALACAO-LOCAL.md).
+[guia de instalação local](docs/INSTALACAO-LOCAL.md). O repositório inclui uma
+configuração Docker Compose opcional para o PostgreSQL de desenvolvimento.
 
 ```bash
 npm install
