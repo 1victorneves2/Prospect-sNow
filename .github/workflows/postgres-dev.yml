@@ -1,0 +1,54 @@
+name: PostgreSQL de desenvolvimento
+
+on:
+  pull_request:
+  push:
+    branches: [main, work]
+
+permissions:
+  contents: read
+
+jobs:
+  postgres:
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_PASSWORD: ci-development-only-password
+      DATABASE_URL: postgresql://snowdrop:ci-development-only-password@localhost:55432/snowdrop_dev?schema=public
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Subir banco e aguardar disponibilidade
+        run: |
+          docker compose up -d
+          for i in {1..30}; do
+            if docker compose exec -T postgres pg_isready -U snowdrop -d snowdrop_dev; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo 'PostgreSQL não ficou disponível a tempo' >&2
+          exit 1
+      - name: Aplicar migration e registrar dado de teste
+        run: |
+          npx prisma migrate deploy --schema prisma/schema.prisma
+          docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U snowdrop -d snowdrop_dev -c "CREATE TABLE ci_persistence_check (value integer NOT NULL); INSERT INTO ci_persistence_check VALUES (42);"
+      - name: Reiniciar e conferir persistência
+        run: |
+          docker compose down
+          docker compose up -d
+          for i in {1..30}; do
+            if docker compose exec -T postgres pg_isready -U snowdrop -d snowdrop_dev; then
+              break
+            fi
+            sleep 2
+          done
+          result=$(docker compose exec -T postgres psql -v ON_ERROR_STOP=1 -U snowdrop -d snowdrop_dev -Atc 'SELECT value FROM ci_persistence_check')
+          test "$result" = '42'
+          npx prisma migrate status --schema prisma/schema.prisma
+      - name: Limpar ambiente isolado de CI
+        if: always()
+        run: docker compose down -v
