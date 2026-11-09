@@ -6,7 +6,7 @@ Análise do [backlog no Notion](https://app.notion.com/p/bc7ff81ee55e41b7aee680f
 
 **Atualização posterior, 9 de novembro de 2026:** a primeira migration foi criada, aplicada em um banco temporário e reproduzida em outro banco vazio com `prisma migrate deploy`. O schema resultante foi comparado ao modelo Prisma sem diferenças. As tabelas principais foram confirmadas. O banco temporário não substitui uma instância reutilizável; autenticação e CRUD de leads seguem pendentes. Consulte [instalação local](INSTALACAO-LOCAL.md).
 
-**Próximo preparo:** foi adicionada configuração Docker Compose para recriar PostgreSQL de desenvolvimento com volume persistente e senha em arquivo local ignorado pelo Git. O arquivo foi validado estruturalmente, mas o fluxo Docker ainda precisa ser executado em um computador com Docker disponível. A escolha do provedor de autenticação continua pendente.
+**Atualização de preparo:** foi adicionada configuração Docker Compose para recriar PostgreSQL de desenvolvimento com volume persistente e senha em arquivo local ignorado pelo Git. Uma execução no GitHub validou a inicialização, a migration e a persistência após reiniciar; a configuração ainda não foi executada neste computador, que não possui Docker. A escolha do provedor de autenticação continua pendente.
 
 ## Recomendação: validar persistência real
 
