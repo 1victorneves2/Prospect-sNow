@@ -16,7 +16,7 @@ Na prévia, a descoberta apresenta um candidato fictício para revisão antes da
 Rascunhos podem ser editados e aprovados por lead durante a sessão; uma edição posterior
 exige nova aprovação. Não há envio de mensagens e os dados não são salvos ao recarregar.
 
-A API NestJS possui configuração tipada e módulo Prisma. A conexão com PostgreSQL pode ser validada localmente; os dados da interface ainda são demonstrativos e não há CRUD persistente, autenticação, Google Places ou OpenAI conectados. Mantenha chaves de API fora do navegador.
+A API NestJS possui configuração tipada, módulo Prisma e guardas de autorização. As rotas privadas recusam acesso até um provedor de autenticação ser configurado. A conexão com PostgreSQL pode ser validada localmente; os dados da interface ainda são demonstrativos e não há CRUD persistente, login, Google Places ou OpenAI conectados. Mantenha chaves de API fora do navegador.
 
 ## Executar
 

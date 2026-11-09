@@ -25,6 +25,11 @@
 
 ## Operação
 
+- Rotas são privadas por padrão; apenas as de saúde estão explicitamente públicas.
+- Sem um provedor de identidade configurado, o verificador padrão recusa todos os
+  tokens. Os testes usam identidades fictícias e não constituem login real.
+- A organização deve vir da identidade verificada e fazer parte das consultas ao
+  banco. Os utilitários de escopo não tornam consultas futuras seguras por si só.
 - Rate limit em login, descoberta e geração de IA.
 - Logs estruturados com `requestId`, sem segredos ou conteúdo sensível desnecessário.
 - Respostas de erro não incluem exceções internas; use `X-Request-Id` para correlacionar

@@ -20,6 +20,16 @@ Cada resposta inclui `X-Request-Id`. Os erros seguem o formato
 `{ "code": "...", "message": "...", "requestId": "..." }`. Os logs HTTP registram
 ID, método, rota, status e duração, sem corpo da requisição nem query string.
 
+## Autorização em preparação
+
+As rotas são privadas por padrão; apenas as rotas de saúde foram marcadas como públicas.
+O verificador de identidade padrão recusa todos os tokens: login e acesso a dados reais
+ainda não estão disponíveis. Não há provedor de autenticação escolhido ou configurado.
+O adaptador futuro deve validar a sessão e retornar usuário, organização e papel confiáveis.
+Os guardas de papel e as funções de escopo por organização são uma base para as próximas
+rotas: cada consulta de recurso deve aplicar o escopo da identidade verificada. Eles não
+substituem essa filtragem no banco nem implementam o CRUD ou login.
+
 ## Ordem para iniciar
 
 1. Configurar `DATABASE_URL` e aplicar a primeira migração a partir de `../../prisma/schema.prisma`.
