@@ -12,6 +12,10 @@ Esta primeira entrega implementa a base visual navegável do MVP com dados demon
 - Mensagem comercial para revisão e aprovação humana.
 - Pipeline comercial com movimentação de etapa em memória.
 
+Na prévia, a descoberta apresenta um candidato fictício para revisão antes da inclusão.
+Rascunhos podem ser editados e aprovados por lead durante a sessão; uma edição posterior
+exige nova aprovação. Não há envio de mensagens e os dados não são salvos ao recarregar.
+
 A API NestJS possui configuração tipada e módulo Prisma. A conexão com PostgreSQL pode ser validada localmente; os dados da interface ainda são demonstrativos e não há CRUD persistente, autenticação, Google Places ou OpenAI conectados. Mantenha chaves de API fora do navegador.
 
 ## Executar

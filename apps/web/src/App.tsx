@@ -20,6 +20,7 @@ import { LeadRow } from './components/LeadRow'
 import { SearchOverlay } from './components/SearchOverlay'
 import { initialLeads, scoreLevel, stageColor, type Lead, type Stage } from './demo/leads'
 import { canTransition } from './demo/pipeline'
+import { approveDraft, editDraft, type Draft } from './demo/drafts'
 
 type PipelineEvent = {
   leadId: number
@@ -48,6 +49,7 @@ export function App() {
   const [showSearch, setShowSearch] = useState(false)
   const [selected, setSelected] = useState<Lead | null>(null)
   const [pipelineHistory, setPipelineHistory] = useState<PipelineEvent[]>([])
+  const [drafts, setDrafts] = useState<Record<number, Draft>>({})
   const [leadListScenario, setLeadListScenario] = useState<LeadListScenario>('ready')
   const closeSearch = useCallback(() => setShowSearch(false), [])
   const closeLead = useCallback(() => setSelected(null), [])
@@ -71,16 +73,16 @@ export function App() {
     [leads, query],
   )
 
-  function runDiscovery() {
+  function runDiscovery(segment: string, region: string) {
     const newLead: Lead = {
       id: Math.max(...leads.map((lead) => lead.id)) + 1,
-      name: 'Essência da Moda',
-      segment: 'Moda e vestuário',
-      region: 'Centro, Manaus',
+      name: 'Exemplo de empresa fictícia',
+      segment,
+      region,
       score: 68,
       stage: 'Descoberto',
       phone: true,
-      site: 'Ausente',
+      site: 'Ativo',
       updated: 'Agora',
     }
     setLeads((current) => [newLead, ...current])
@@ -175,7 +177,12 @@ export function App() {
               onSelect={setSelected}
             />
           )}
-          {page === 'Descoberta' && <Discovery onRun={runDiscovery} />}
+          {page === 'Descoberta' && (
+            <Discovery
+              onRun={runDiscovery}
+              alreadyAdded={leads.some((lead) => lead.name === 'Exemplo de empresa fictícia')}
+            />
+          )}
           {page === 'Leads' && (
             <Leads
               leads={visibleLeads}
@@ -186,7 +193,9 @@ export function App() {
               onSelect={setSelected}
             />
           )}
-          {page === 'Mensagens' && <Messages />}
+          {page === 'Mensagens' && (
+            <Messages leads={leads} drafts={drafts} onDraftsChange={setDrafts} />
+          )}
           {page === 'Pipeline' && <Pipeline leads={leads} onSelect={setSelected} />}
           {page === 'Relatórios' && <Reports />}
         </section>
@@ -363,8 +372,16 @@ function Overview({
   )
 }
 
-function Discovery({ onRun }: { onRun: () => void }) {
+function Discovery({
+  onRun,
+  alreadyAdded,
+}: {
+  onRun: (segment: string, region: string) => void
+  alreadyAdded: boolean
+}) {
   const [segment, setSegment] = useState('Moda e vestuário')
+  const [location, setLocation] = useState('Manaus, Amazonas')
+  const [reviewing, setReviewing] = useState(false)
   return (
     <>
       <div className="page-heading">
@@ -391,7 +408,14 @@ function Discovery({ onRun }: { onRun: () => void }) {
             Localização <span>Obrigatório</span>
             <div className="input-icon">
               <MapPin size={17} />
-              <input defaultValue="Manaus, Amazonas" aria-label="Localização" />
+              <input
+                value={location}
+                onChange={(event) => {
+                  setLocation(event.target.value)
+                  setReviewing(false)
+                }}
+                aria-label="Localização"
+              />
             </div>
           </label>
           <label>
@@ -400,40 +424,45 @@ function Discovery({ onRun }: { onRun: () => void }) {
               <Building2 size={17} />
               <input
                 value={segment}
-                onChange={(e) => setSegment(e.target.value)}
+                onChange={(e) => {
+                  setSegment(e.target.value)
+                  setReviewing(false)
+                }}
                 aria-label="Segmento ou palavra-chave"
               />
             </div>
           </label>
-          <div className="form-cols">
-            <label>
-              Quantidade desejada
-              <select defaultValue="20">
-                <option>20 empresas</option>
-                <option>40 empresas</option>
-                <option>60 empresas</option>
-              </select>
-            </label>
-            <label>
-              Região{' '}
-              <select defaultValue="Todas as regiões">
-                <option>Todas as regiões</option>
-                <option>Zona Centro-Sul</option>
-                <option>Zona Oeste</option>
-              </select>
-            </label>
-          </div>
           <div className="notice">
             <Sparkles size={17} />
             <div>
               <strong>Simulação de descoberta</strong>
               <br />A integração com Google Places ainda não está ativa. Este botão adiciona um
-              exemplo temporário para explorar a interface.
+              candidato fictício para revisão; não realiza uma busca real.
             </div>
           </div>
-          <button className="primary large" onClick={onRun}>
-            <Search size={18} /> Simular resultado
+          <button
+            className="primary large"
+            disabled={!location.trim() || !segment.trim()}
+            onClick={() => setReviewing(true)}
+          >
+            <Search size={18} /> Simular busca
           </button>
+          {reviewing && (
+            <div className="discovery-review" aria-live="polite">
+              <h3>Candidato fictício para revisão</h3>
+              <p>
+                Exemplo de empresa fictícia · {segment.trim()} · {location.trim()}
+              </p>
+              <p>Somente a confirmação abaixo adiciona o exemplo à lista desta sessão.</p>
+              <button
+                className="primary"
+                disabled={alreadyAdded}
+                onClick={() => onRun(segment.trim(), location.trim())}
+              >
+                {alreadyAdded ? 'Exemplo já adicionado' : 'Adicionar exemplo aos leads'}
+              </button>
+            </div>
+          )}
         </section>
         <aside className="discovery-note">
           <span className="note-chip">COMO FUNCIONA</span>
@@ -444,7 +473,7 @@ function Discovery({ onRun }: { onRun: () => void }) {
           </p>
           <ol>
             <li>
-              <b>1</b> Você define cidade, segmento e quantidade.
+              <b>1</b> Você define localização e segmento.
             </li>
             <li>
               <b>2</b> Revise os resultados encontrados.
@@ -524,7 +553,18 @@ function Leads({
   )
 }
 
-function Messages() {
+function Messages({
+  leads,
+  drafts,
+  onDraftsChange,
+}: {
+  leads: Lead[]
+  drafts: Record<number, Draft>
+  onDraftsChange: React.Dispatch<React.SetStateAction<Record<number, Draft>>>
+}) {
+  const [leadId, setLeadId] = useState(leads[0]?.id ?? 0)
+  const lead = leads.find((item) => item.id === leadId)
+  const draft = drafts[leadId] ?? { text: '', approved: false }
   return (
     <>
       <div className="page-heading">
@@ -535,31 +575,76 @@ function Messages() {
         </div>
       </div>
       <section className="panel message-panel">
-        <div className="message-lead">
-          <div className="company-logo">BM</div>
-          <div>
-            <h2>Bella Moda Feminina</h2>
-            <p>Vitrine digital · Alta oportunidade</p>
-          </div>
-          <span className="badge violet">RASCUNHO</span>
-        </div>
-        <div className="message-copy">
-          Oi, tudo bem? Me chamo Victor! Conheci o trabalho de vocês e percebi que os produtos estão
-          muito bem apresentados no Instagram.
-          <br />
-          <br />
-          Pensei em uma vitrine digital própria, onde os clientes conseguem conhecer as peças e
-          montar o pedido antes de chamar no WhatsApp. Isso pode deixar o atendimento mais
-          organizado e facilitar as vendas.
-          <br />
-          <br />
-          Trabalho com desenvolvimento e inteligência comercial. Se fizer sentido, podemos marcar
-          uma conversa rápida para eu mostrar como funcionaria? 😊
-        </div>
-        <p className="message-disclaimer">
-          Exemplo ilustrativo. A geração, edição e aprovação estarão disponíveis após a conexão com
-          a API.
-        </p>
+        {lead ? (
+          <>
+            <label className="draft-label" htmlFor="message-lead">
+              Empresa
+            </label>
+            <select
+              id="message-lead"
+              value={leadId}
+              onChange={(event) => setLeadId(Number(event.target.value))}
+            >
+              {leads.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+            <div className="message-lead draft-heading">
+              <div>
+                <h2>{lead.name}</h2>
+                <p>
+                  {lead.segment} · {lead.region}
+                </p>
+              </div>
+              <span className={`badge ${draft.approved ? 'green' : 'violet'}`}>
+                {draft.approved ? 'APROVADO' : 'RASCUNHO'}
+              </span>
+            </div>
+            <label className="draft-label" htmlFor="draft-text">
+              Mensagem para revisão
+            </label>
+            <textarea
+              id="draft-text"
+              className="draft-editor"
+              rows={8}
+              value={draft.text}
+              placeholder="Escreva uma abordagem baseada em informações verificadas."
+              onChange={(event) => {
+                const text = event.target.value
+                onDraftsChange((current) => ({
+                  ...current,
+                  [leadId]: editDraft(current[leadId] ?? { text: '', approved: false }, text),
+                }))
+              }}
+            />
+            <div className="draft-actions">
+              <button
+                className="primary"
+                disabled={!draft.text.trim() || draft.approved}
+                onClick={() =>
+                  onDraftsChange((current) => ({
+                    ...current,
+                    [leadId]: approveDraft(current[leadId] ?? { text: '', approved: false }),
+                  }))
+                }
+              >
+                {draft.approved ? 'Mensagem aprovada' : 'Aprovar rascunho'}
+              </button>
+              <span role="status">
+                {draft.approved
+                  ? 'Aprovado para esta prévia. Alterações exigem nova aprovação.'
+                  : 'Revise o conteúdo antes de aprovar.'}
+              </span>
+            </div>
+            <p className="message-disclaimer">
+              Prévia: os rascunhos ficam apenas nesta sessão e não enviam mensagens.
+            </p>
+          </>
+        ) : (
+          <p>Adicione um lead de exemplo para criar um rascunho.</p>
+        )}
       </section>
     </>
   )

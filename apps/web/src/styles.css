@@ -364,7 +364,8 @@ main {
 }
 button:focus-visible,
 input:focus-visible,
-select:focus-visible {
+select:focus-visible,
+textarea:focus-visible {
   outline: 2px solid #8a6cbd;
   outline-offset: 2px;
 }
@@ -835,6 +836,48 @@ select {
 .message-panel {
   max-width: 760px;
   padding: 27px;
+}
+.draft-label {
+  display: block;
+  margin: 18px 0 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #423d4c;
+}
+.draft-heading {
+  margin-top: 20px;
+}
+.draft-editor {
+  width: 100%;
+  min-height: 180px;
+  resize: vertical;
+  padding: 14px;
+  border: 1px solid #ddd8e5;
+  border-radius: 8px;
+  color: #423d4c;
+  font: inherit;
+  line-height: 1.6;
+}
+.draft-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  font-size: 12px;
+  color: #635a6d;
+}
+.discovery-review {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid #ded5ed;
+  border-radius: 8px;
+  background: #faf8fd;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.discovery-review h3 {
+  margin: 0;
 }
 .message-lead {
   display: flex;
