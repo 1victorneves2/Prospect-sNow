@@ -16,6 +16,9 @@ A API NestJS possui configuração tipada e módulo Prisma. A conexão com Postg
 
 ## Executar
 
+Para preparar outro computador, configurar PostgreSQL e aplicar as migrações, siga o
+[guia de instalação local](docs/INSTALACAO-LOCAL.md).
+
 ```bash
 npm install
 npm run dev
@@ -51,7 +54,7 @@ O hook de pre-commit formata e aplica lint nos arquivos alterados. A integraçã
 
 ## Próxima etapa técnica
 
-Aplicar a primeira migration em um PostgreSQL de desenvolvimento e implementar autenticação e CRUD de leads antes de habilitar integrações externas. Veja [a análise do próximo ciclo](docs/PROXIMO-CICLO.md).
+A primeira migração foi versionada e validada em PostgreSQL de desenvolvimento temporário. Configurar um banco reutilizável e implementar autenticação e CRUD de leads antes de habilitar integrações externas. Veja [a análise do próximo ciclo](docs/PROXIMO-CICLO.md).
 
 ## Base técnica planejada
 
