@@ -21,10 +21,14 @@
     "format:check": "prettier --check .",
     "test": "vitest run --passWithNoTests",
     "db:format": "prisma format --schema prisma/schema.prisma",
-    "db:validate": "prisma validate --schema prisma/schema.prisma"
+    "db:validate": "prisma validate --schema prisma/schema.prisma",
+    "build:sites": "npm run build --workspace=@snowdrop/web && node scripts/build-site-worker.mjs",
+    "test:sites": "node --test site-worker/verify-worker.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "drizzle-kit": "^0.31.11",
+    "drizzle-orm": "^0.45.4",
     "eslint": "^10.12.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",

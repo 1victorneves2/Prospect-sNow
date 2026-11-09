@@ -18,6 +18,7 @@ import { LeadDrawer } from './components/LeadDrawer'
 import { LeadResults } from './components/LeadResults'
 import { LeadRow } from './components/LeadRow'
 import { SearchOverlay } from './components/SearchOverlay'
+import { RealProspecting, SavedOpportunities } from './components/RealProspecting'
 import { initialLeads, scoreLevel, stageColor, type Lead, type Stage } from './demo/leads'
 import { canTransition } from './demo/pipeline'
 import { approveDraft, editDraft, type Draft } from './demo/drafts'
@@ -32,6 +33,8 @@ type PipelineEvent = {
 }
 
 const nav = [
+  ['Busca de empresas', Search],
+  ['Oportunidades salvas', Target],
   ['Visão geral', LayoutDashboard],
   ['Descoberta', Search],
   ['Leads', Users],
@@ -43,7 +46,7 @@ const nav = [
 type LeadListScenario = 'ready' | 'empty' | 'loading' | 'error'
 
 export function App() {
-  const [page, setPage] = useState('Visão geral')
+  const [page, setPage] = useState('Busca de empresas')
   const [leads, setLeads] = useState(initialLeads)
   const [query, setQuery] = useState('')
   const [showSearch, setShowSearch] = useState(false)
@@ -117,13 +120,15 @@ export function App() {
             </button>
           ))}
           <p className="nav-label lower">AMBIENTE</p>
-          <p className="sidebar-note">Prévia com dados fictícios. Nenhuma alteração é salva.</p>
+          <p className="sidebar-note">
+            Busca de empresas e oportunidades salvas. As demais telas são demonstrativas.
+          </p>
         </nav>
         <div className="sidebar-footer">
           <div className="avatar">VM</div>
           <div>
-            <strong>Workspace demo</strong>
-            <small>Ambiente de demonstração</small>
+            <strong>Minha área</strong>
+            <small>Acesso privado</small>
           </div>
           <MoreHorizontal size={18} />
         </div>
@@ -140,11 +145,11 @@ export function App() {
             <span className="brand-mark">✦</span> snowdrop <b>prospect</b>
           </div>
           <div className="top-actions">
-            <span className="demo-pill">Prévia demonstrativa</span>
+            <span className="demo-pill">Acesso privado</span>
             <button className="command" onClick={() => setShowSearch(true)}>
-              <Command size={15} /> Buscar <kbd>⌘/Ctrl K</kbd>
+              <Command size={15} /> Buscar exemplos <kbd>⌘/Ctrl K</kbd>
             </button>
-            <button className="new-search" onClick={() => setPage('Descoberta')}>
+            <button className="new-search" onClick={() => setPage('Busca de empresas')}>
               <Plus size={17} /> Nova pesquisa
             </button>
           </div>
@@ -162,13 +167,21 @@ export function App() {
           ))}
         </nav>
         <section className="content">
-          <div className="demo-banner" role="status">
-            <Sparkles size={17} />
-            <span>
-              <strong>Interface em construção.</strong> Empresas, indicadores e diagnósticos abaixo
-              são exemplos fictícios; mudanças são temporárias.
-            </span>
-          </div>
+          {page !== 'Busca de empresas' && page !== 'Oportunidades salvas' && (
+            <div className="demo-banner" role="status">
+              <Sparkles size={17} />
+              <span>
+                <strong>Interface em construção.</strong> Empresas, indicadores e diagnósticos
+                abaixo são exemplos fictícios; mudanças são temporárias.
+              </span>
+            </div>
+          )}
+          {page === 'Busca de empresas' && (
+            <RealProspecting onViewSaved={() => setPage('Oportunidades salvas')} />
+          )}
+          {page === 'Oportunidades salvas' && (
+            <SavedOpportunities onSearch={() => setPage('Busca de empresas')} />
+          )}
           {page === 'Visão geral' && (
             <Overview
               leads={leads}

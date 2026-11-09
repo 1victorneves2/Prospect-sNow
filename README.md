@@ -24,6 +24,9 @@ Para preparar outro computador, configurar PostgreSQL e aplicar as migrações, 
 [guia de instalação local](docs/INSTALACAO-LOCAL.md). O repositório inclui uma
 configuração Docker Compose opcional para o PostgreSQL de desenvolvimento.
 
+A versão hospedada no Sites também inclui uma busca preparada para Google Places;
+consulte [configuração e limitações](docs/GOOGLE-PLACES-SITES.md).
+
 ```bash
 npm install
 npm run dev

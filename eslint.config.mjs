@@ -16,6 +16,21 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    files: ['site-worker/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        Response: 'readonly',
+        Request: 'readonly',
+        URL: 'readonly',
+        fetch: 'readonly',
+        AbortSignal: 'readonly',
+        crypto: 'readonly',
+        atob: 'readonly',
+        __ASSETS__: 'readonly',
+      },
+    },
+  },
+  {
     files: ['apps/web/**/*.{ts,tsx}'],
     languageOptions: {
       globals: {
